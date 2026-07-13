@@ -1,0 +1,13 @@
+services:
+  cossacks152:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: cossacks152:latest
+    container_name: cossacks152
+    restart: always
+    ports:
+      - "8790:8790"
+      - "8792:8792/udp"
+    volumes:
+      - ../config.json:/config/config.json:ro

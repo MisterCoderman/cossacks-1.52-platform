@@ -1,0 +1,42 @@
+<NGDLG>
+//#exec(LW_visbox&0&%LBX)
+#exec(LW_lockbox&%LBX)
+#exec(LW_enb&0&%RMLST)
+
+#font(B1F18,B1F18,B1F18)
+#ebox[%L](x:200,y:80,w:450,h:185)
+#pan[%MPN](%L[x:0,y:10,w:100%-10,h:100%],8)
+#ctxt[%TIT](%L[x:0,y:5,w:100%,h:10],{},"Create new game")
+
+#font(Y1F18,Y1F18,Y1F18)
+#txt[%L_NAME](%L[x:20,y:44,w:150,h:24],{},"Game Title")
+#pan[%P_NAME](%L[x:200,y:42,w:100%-220,h:24],13)
+#font(WF18,WF18,WF18)
+#edit[%E_NAME](%L[x:200,y:40,w:100%-220,h:24],{%GV_VE_TITLE})
+
+#font(Y1F18,Y1F18,Y1F18)
+#txt[%L_PASS](%L[x:20,y:70,w:150,h:24],{},"Password")
+#pan[%P_PASS](%L[x:200,y:68,w:100%-220,h:24],13)
+#font(WF18,WF18,WF18)
+#edit[%E_PASS](%L[x:200,y:66,w:100%-220,h:24],{%GV_VE_PASSWD})
+
+#font(Y1F18,Y1F18,Y1F18)
+#txt[%L_MAXPL](%L[x:20,y:97,w:150,h:24],{},"Max Players")
+#font(WF18,WF18,WF18)
+#cbb[%E_MAXPL](%L[x:200,y:95,w:100%-220,h:24],{%GV_VE_MAX_PL},2,3,4,5,6,7,5)
+
+#font(Y1F18,Y1F18,Y1F18)
+#txt[%L_TYPE](%L[x:20,y:123,w:150,h:24],{},"Type")
+#font(WF18,WF18,WF18)
+#cbb[%E_TYPE](%L[x:200,y:121,w:100%-220,h:24],{%GV_VE_TYPE},Ordinal,Battle,0)
+
+#font(Y1F18,Y1F18,Y1F18)
+#txt[%L_LEVEL](%L[x:20,y:149,w:150,h:24],{},"Level")
+#font(WF18,WF18,WF18)
+#cbb[%E_LEVEL](%L[x:200,y:147,w:100%-220,h:24],{%GV_VE_LEVEL},--,Easy,Normal,Hard,0)
+
+#font(B1F18,B1F18,B1F18)
+
+#sbtn[%B_RGST](%L[x:60,y:100%+15,w:100,h:24],{GW|open&reg_new_room.dcml&VE_NICK=<%GV_LCN_NICK>^VE_TITLE=<%GV_VE_TITLE>^VE_MAX_PL=<%GV_VE_MAX_PL>^VE_PASSWD=<%GV_VE_PASSWD>^VE_TYPE=<%GV_VE_TYPE>^VE_LEVEL=<%GV_VE_LEVEL>^ASTATE=<%ASTATE>|LW_lockall},"Create")
+#sbtn[%B_RGST](%L[x:275,y:100%+15,w:100,h:24],{LW_file&Internet/Cash/cancel.cml},"Cancel")
+<NGDLG>

@@ -1,0 +1,177 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use AnyEvent::Socket;
+use AnyEvent::Log;
+use Getopt::Long::Descriptive v0.097;
+use GSC::Stream;
+
+# Прокси для безболезненного перезда сервера с одного ip на другой, на время смены DNS
+# ToDo: разобрастя с разрывом и штатным закрытием соединения
+
+my ($opt, $usage) = describe_options(
+  'cossacks-proxy %o',
+  ['from|f=s', 'Listen ip:port', { required => 1,  }],
+  ['to|t=s', 'Connect to host:port', { required => 1 }],
+  ['max-request-size|s', 'Max request size'],
+  ['log-level|l=s', 'Log level', { default => 'info' }],
+  ['help|h', 'Print help message', { shortcircuit => 1 }],
+);
+
+if($opt->help) {
+  print $usage . "        \$CSPKEY       Key for connect to cossacks server\n";
+  exit;
+}
+
+my($from_host, $from_port) = $opt->from =~ /^(\d+\.\d+\.\d+\.\d+):(\d+)$/ or $usage->die({
+  pre_text => "Value \"" . $opt->from() . "\" invalid for option from (ip:port expected)\n"
+});
+
+my($to_host, $to_port) = $opt->to =~ /(.+):(\d+)$/ or $usage->die({
+  pre_text => "Value \"" . $opt->from() . "\" invalid for option from (host:port expected)\n"
+});
+
+unless(exists $ENV{CSPKEY}) {
+  die "CSPKEY env variable is unset\n";
+}
+my $key = $ENV{CSPKEY};
+
+if($opt->log_level) {
+  my @avalible = qw/fatal alert crit error warn note info debug trace/;
+  grep {$opt->log_level eq $_} @avalible or $usage->die({
+    pre_text => "Value \"" . $opt->log_level() . "\" invalid for option from (" . join(", ", @avalible[0..$#avalible-1]). " or $avalible[-1] expected)\n"
+  });
+}
+
+$AnyEvent::Log::FILTER->level($opt->log_level);
+my $debug = 1 if $opt->log_level eq 'debug';
+my $buf_max_size = 4096;
+
+tcp_server $from_host, $from_port, sub {
+  my($client_fh, $ip, $port) = @_;
+  AE::log info => "$ip:$port connected";
+
+  tcp_connect $to_host, $to_port, sub {
+    my($connection_fh) = @_ or do {
+      AE::log error => "can't connect to server $to_host:$to_port: $!";
+      return;
+    };
+
+    AE::log debug => "$ip:$port proxy connected to server" if $debug;
+
+    my $up_proxy_cb;
+    my $raw = GSC::Stream->new(1, 0, 0, proxy => [$ip, $port, $key, '', ''])->bin;
+
+    my $w; $w = AE::io $connection_fh, 1, sub {
+      my $r = syswrite $connection_fh, $raw, length($raw);
+      substr($raw, 0, $r) = '' if $r;
+      if(defined $r) {
+        AE::log debug => "write \"proxy\" command $r" if $debug;
+        if(length $raw == 0) {
+          undef $w;
+          $up_proxy_cb->();
+        }
+      } else {
+        AE::log error => "$ip:$port write server connection error: $!";
+        undef $w;
+        close $client_fh;
+      }
+    };
+
+    $up_proxy_cb = sub {
+      my($wclr, $wcnw, $wcnr, $wclw);
+      my $client_buf = '';
+      my $finish_client_sending;
+      my($client_read_cb, $connection_write_cb);
+
+      $client_read_cb = sub {
+        my $r = sysread $client_fh, $client_buf, $buf_max_size;
+        undef $wclr;
+        if($r) {
+          AE::log debug => "r $ip:$port client > proxy $r" if $debug;
+          $wcnw = AE::io $connection_fh, 1, $connection_write_cb;  
+        } else {
+          $finish_client_sending = 1;
+          if(defined $r) {
+            AE::log info => "$ip:$port disconnected";
+          } else {
+            AE::log error => "$ip:$port read client connection error: $!";
+          }
+          close $connection_fh;
+          undef $wcnr;
+        }
+      };
+
+      $connection_write_cb = sub {
+        my $r = syswrite $connection_fh, $client_buf, length($client_buf);
+        substr($client_buf, 0, $r) = '' if $r;
+        if(defined $r) {
+          AE::log debug => "w $ip:$port proxy > server $r" if $debug && defined $r;
+          if(length $client_buf == 0) {
+            undef $wcnw;
+            if(!$finish_client_sending) {
+              $wclr = AE::io $client_fh, 0, $client_read_cb;
+            } else {
+              close $connection_fh;
+            }
+          }
+        } else {
+          AE::log error => "$ip:$port write server connection error: $!";
+          undef $wcnw;
+          close $client_fh;
+        }
+      };
+
+      $wclr = AE::io $client_fh, 0, $client_read_cb;
+
+      my $connection_buf = '';
+      my $finish_connection_sending;
+      my($connection_read_cb, $client_write_cb);
+
+      $connection_read_cb = sub {
+        my $r = sysread $connection_fh, $connection_buf, $buf_max_size;
+        undef $wcnr;
+        if($r) {
+          AE::log debug => "r $ip:$port proxy < server $r" if $debug;
+          $wclw = AE::io $client_fh, 1, $client_write_cb;  
+        } else {
+          $finish_connection_sending = 1;
+          if(defined $r) {
+            AE::log info => "$ip:$port server close connection";
+          } else {
+            AE::log error => "$ip:$port read server connection error: $!";
+          }
+          close $client_fh;
+          undef $wclr;
+        }
+      };
+
+      $client_write_cb = sub {
+        my $r = syswrite $client_fh, $connection_buf, length($connection_buf);
+        substr($connection_buf, 0, $r) = '' if $r;
+        if(defined $r) {
+          AE::log debug => "w $ip:$port client < proxy $r" if $debug && defined $r;
+          if(length $connection_buf == 0) {
+            undef $wclw;
+            if(!$finish_connection_sending) {
+              $wcnr = AE::io $connection_fh, 0, $connection_read_cb;
+            } else {
+              close $client_fh;
+            }
+          }
+        } else {
+          AE::log error => "$ip:$port write client connection error: $!";
+          undef $wclw;
+          close $connection_fh;
+        }
+      };
+
+      $wcnr = AE::io $connection_fh, 0, $connection_read_cb;
+    }
+  };
+
+}, sub {
+  AE::log notice => "listen $from_host:$from_port";
+};
+
+AE::cv->recv();

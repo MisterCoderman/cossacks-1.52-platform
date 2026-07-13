@@ -1,0 +1,6 @@
+{
+  "name": "cossacks152-master",
+  "version": "1.52.0",
+  "private": true,
+  "dependencies": { "ws": "^8.18.0" }
+}

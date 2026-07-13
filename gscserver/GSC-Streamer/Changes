@@ -1,0 +1,6 @@
+Revision history for Perl extension GSC::Streamer.
+
+0.01  Thu Dec  6 09:45:50 2012
+	- original version; created by h2xs 1.23 with options
+		-X -n GSC::Streamer
+

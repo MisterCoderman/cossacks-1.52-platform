@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Cossacks: Back to War — 1.52</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden}
+  /* MENU (default): fixed 1024x768 letterboxed and centered — NEVER changes.
+     GAME (body.ingame): canvas fills 100% of the window; the C side sizes the backing store to the
+     tab's pixel box and tracks it live, so the in-mission resolution auto-fits and resizes in
+     real time. Only the in-game view changes; the menu stays exactly as it was. */
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  canvas#canvas{
+    aspect-ratio:1024/768; max-width:100vw; max-height:100vh; width:auto; height:auto;
+    display:block; background:#000; outline:none; image-rendering:auto;
+  }
+  body.ingame canvas#canvas{
+    aspect-ratio:auto; width:100%; height:100%; max-width:none; max-height:none;
+  }
+  #loading{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:#e8dcc0;font-family:Georgia,serif;gap:14px;background:#14110c;z-index:5}
+  #loading .t{font-size:1.4rem;color:#f0d99b;letter-spacing:.04em}
+  #loading .b{width:260px;height:6px;background:#332b1d;border-radius:4px;overflow:hidden}
+  #loading .b i{display:block;height:100%;width:30%;background:linear-gradient(90deg,#8a6f3a,#e8c878);
+    border-radius:4px;transition:width .2s}
+  #loading .s{font-size:.82rem;color:#a99a78;min-height:1em}
+  #fsbtn{position:fixed;right:10px;top:10px;z-index:6;width:38px;height:38px;border:0;border-radius:8px;
+    background:rgba(20,17,12,.55);color:#f0d99b;font-size:20px;cursor:pointer;opacity:.35;
+    transition:opacity .15s;line-height:38px;text-align:center;padding:0}
+  #fsbtn:hover{opacity:1;background:rgba(30,26,18,.85)}
+  :fullscreen #fsbtn{opacity:.15}
+</style>
+</head>
+<body>
+  <div id="wrap"><canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas></div>
+  <button id="fsbtn" title="Полный экран (F11)">⛶</button>
+  <div id="loading"><div class="t">Cossacks: Back to War <span style="opacity:.65">v1.52</span></div>
+    <div class="b"><i id="bar"></i></div><div class="s" id="stat">Загрузка…</div></div>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    // Fullscreen ONLY on explicit user action (button or F11). Never programmatic/auto.
+    function goFullscreen(){ var el=document.getElementById('wrap');
+      (el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el); }
+    document.getElementById('fsbtn').addEventListener('click', goFullscreen);
+    addEventListener('keydown', function(e){ if(e.key==='F11'){ e.preventDefault(); goFullscreen(); } });
+    // The on-screen fullscreen toggle is a browser-only affordance; the desktop (Electron) app has
+    // its own window controls, so hide the button there. F11 still works. Same file, runtime choice.
+    if (window.cosElectron) { var _fsb=document.getElementById('fsbtn'); if(_fsb) _fsb.style.display='none'; }
+    // Mouse confinement during play is handled engine-side via SDL relative-mouse mode (emscripten
+    // requests the pointer lock on the next in-canvas click); Esc releases it (browser-native).
+
+    // Engine calls this from the Exit menu. Electron: close the window (main.js then quits the app).
+    // Browser: a tab can't self-close, so hide the frozen canvas and offer a restart.
+    window.cosOnExit = function () {
+      // Desktop (Electron): actually quit the app. Prefer the explicit quit IPC (reliable), fall
+      // back to window.close(). Browser: a tab can't self-close, so show the restart card below.
+      try { if (window.cosElectron) { if (window.cosElectron.quit) window.cosElectron.quit(); else window.close(); return; } } catch (e) {}
+      var ru = !/[?&]lang=en\b/.test(location.search);
+      var w = document.getElementById('wrap'); if (w) w.style.display = 'none';
+      var fs = document.getElementById('fsbtn'); if (fs) fs.style.display = 'none';
+      try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
+      var d = document.createElement('div');
+      d.style.cssText = 'position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;' +
+        'justify-content:center;gap:18px;background:#14110c;color:#e8dcc0;font-family:Georgia,serif;z-index:50';
+      d.innerHTML = '<div style="font-size:1.5rem;color:#f0d99b">Cossacks: Back to War <span style="opacity:.65">v1.52</span></div>' +
+        '<div>' + (ru ? 'Игра завершена' : 'Game over') + '</div>' +
+        '<button id="cosrestart" style="margin-top:8px;padding:10px 26px;border:0;border-radius:8px;' +
+        'background:#8a6f3a;color:#f5e9c8;font:600 1rem Georgia,serif;cursor:pointer">' +
+        (ru ? 'Играть снова' : 'Play again') + '</button>';
+      document.body.appendChild(d);
+      document.getElementById('cosrestart').onclick = function () { location.reload(); };
+    };
+
+    // SDL_SetWindowSize (emscripten) stamps inline width/height (px) on the canvas, which overrides
+    // the CSS letterbox and squashes the picture — especially after leaving fullscreen. Strip the
+    // inline size so the CSS (aspect-ratio 1024:768 + max 100vw/vh) owns the DISPLAY size again; the
+    // backing-store resolution and SDL_RenderSetLogicalSize keep the frame correct.
+    function fixCanvasDisplay(){ canvas.style.width=''; canvas.style.height=''; }
+    document.addEventListener('fullscreenchange', function(){ setTimeout(fixCanvasDisplay, 60); });
+    document.addEventListener('webkitfullscreenchange', function(){ setTimeout(fixCanvasDisplay, 60); });
+    addEventListener('resize', fixCanvasDisplay);
+    // keep correcting for the first seconds (SDL re-stamps size as the game (re)creates its window)
+    var _fixN = 0, _fixT = setInterval(function(){ fixCanvasDisplay(); if(++_fixN > 40) clearInterval(_fixT); }, 500);
+
+    var Module = {
+      arguments: (function(){
+        try {
+          var q = new URLSearchParams(location.search);
+          var mission = q.get('mission');
+          if (mission) return ['/MISSION', mission];
+          var mapeditor = q.get('mapeditor');
+          if (mapeditor) return ['/MAPEDITOR', mapeditor];
+        } catch (e) {}
+        return [];
+      })(),
+      canvas: canvas,
+      // Release build: engine stdout/stderr are silenced (no debug spam in the console).
+      print:    function(){},
+      printErr: function(){},
+      // hide the loading overlay once the run loop starts drawing
+      setStatus: function(text){
+        var s=document.getElementById('stat'), b=document.getElementById('bar');
+        if(!s) return;
+        // localize emscripten's stock phrases for the RU version - matches cos_data.js's own
+        // language pick EXACTLY (?lang=ru = Russian, anything else/absent = English default).
+        // This used to default to Russian instead, so an English (default, no ?lang=) load showed
+        // "Загрузка данных..." while actually fetching data/en.
+        var ru = /[?&]lang=ru\b/.test(location.search);
+        function loc(t){
+          if(!ru || !t) return t;
+          return t.replace(/Downloading data\.*/i, 'Загрузка данных…')
+                  .replace(/Preparing\.*/i, 'Подготовка…')
+                  .replace(/Running\.*/i, 'Запуск…')
+                  .replace(/All downloads complete\.?/i, 'Загрузка завершена');
+        }
+        var m=text && text.match(/([^(]+)\((\d+(?:\.\d+)?)\/(\d+)\)/);
+        if(m){ b.style.width=(100*(+m[2])/(+m[3]))+'%'; s.textContent=loc(m[1].trim()); }
+        else { s.textContent=loc(text)||''; if(!text) b.style.width='100%'; }
+      },
+      onRuntimeInitialized: function(){
+        // give the first frames a moment, then reveal the canvas
+        setTimeout(function(){ var l=document.getElementById('loading'); if(l) l.style.display='none';
+          canvas.focus(); }, 1200);
+      }
+    };
+    // Resume any suspended WebAudio on the first user gesture (autoplay policy).
+    ['pointerdown','keydown','touchstart'].forEach(function(ev){
+      addEventListener(ev, function(){ try{ Module.SDL2 && Module.SDL2.audioContext &&
+        Module.SDL2.audioContext.resume(); }catch(_){}} , {once:true}); });
+  </script>
+  {{{ SCRIPT }}}
+</body>
+</html>

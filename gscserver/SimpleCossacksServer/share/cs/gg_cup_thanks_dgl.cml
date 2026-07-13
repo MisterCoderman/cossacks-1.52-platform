@@ -1,0 +1,32 @@
+<?~ USE POSIX ~?>
+<?~ USE CMLStringArgFilter ~?>
+<?~ USE CMDFilter ~?>
+<NGDLG>
+#exec(LW_lockbox&%LBX)
+#exec(LW_enb&0&%RMLST)
+<? SET rows = 17 ~?>
+#ebox[%B](x:215,y:10,w:320,h:<? supporters.size <= 9 ? 280 : (supporters.size > rows) ? (55 + (rows + 1) * 25) : (55 + supporters.size * 25) ?>)
+#pan[%MPN](%B[x:0,y:0,w:100%,h:100%],8)
+#font(WF,WF,WF)
+#ctxt[%TIT](%B[x:0,y:6,w:100%,h:30],{},"Thanks for")
+
+<? SET height = 25 ~?>
+<? yoffset = 43 ~?>
+<? FOREACH supporter IN supporters ~?>
+<? IF loop.index == rows ~?>
+#font(YF,YF,YF)
+#txt(%B[x:20,y:<? yoffset + 3 ?>,w:100%,h:25],{},"and more...")
+<? LAST ~?>
+<? ELSE ~?>
+#font(YF,YF,YF)
+#txt(%B[x:20,y:<? yoffset + 3 ?>,w:100%,h:25],{},<? supporter.nick ?>)
+#font(WF,WF,WF)
+#rtxt(%B[x:100%-204,y:<? yoffset + 3 ?>,w:100,h:25],{},<? POSIX.floor(supporter.amount) _ ' RUB ' | arg ?>)
+#btn(%B[x:230,y:<? yoffset ?>,w:72,h:25],{GW|url&<? supporter.url | cmd ?>},"profile")
+<? END ~?>
+<? yoffset = yoffset + height ~?>
+<? END ~?>
+
+#font(YF,WF,RF)
+#sbtn[%B_RGST](%B[xc:50%,y:100%+8,w:160,h:24],{LW_file&Internet/Cash/cancel.cml},"Ok")
+<NGDLG>

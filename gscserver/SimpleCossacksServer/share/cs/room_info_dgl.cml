@@ -1,0 +1,95 @@
+<NGDLG>
+<? USE CMLStringArgFilter ?>
+<? USE date ?>
+//#exec(LW_visbox&0&%LBX)
+#exec(LW_lockbox&%LBX)
+#exec(LW_enb&0&%RMLST)
+#font(WF,WF,YF)
+
+#ebox[%L](x:180,y:30,w:100%-380,h:260)
+#ebox[%E](x:180,y:24,w:100%-380,h:30)
+#pan[%MPN](%L[x:0,y:0,w:100%,h:100%],8)
+#ctxt[%TIT](%E[x:0,y:12,w:100%,h:10],{},"Game info")
+<? IF h.connection.data.dev ?>
+#rtxt(%E[x:320,y:12,w:50,h:10],{},<? "#" _ room.id | arg ?>)
+<? END ?>
+
+#font(WF,YF,WF)
+#txt[%L_NAME](%L[x:20,y:44,w:100,h:24],{},"Game title")
+#font(YF,WF,WF)
+#txt[%T_NAME](%L[x:100,y:44,w:100%-120,h:24],{},<? room.title | arg ?>)
+
+#font(WF,YF,WF)
+#txt[%L_HOST](%L[x:20,y:%T_NAME+6,w:100,h:24],{},"Host")
+#font(YF,WF,WF)
+#txt[%T_HOST](%L[x:100,y:%T_NAME+6,w:100%-120,h:24],{},<? room.players.${room.host_id}.nick | arg ?>)
+
+//#font(WF,YF,WF)
+//#txt[%L_PING](%L[x:20,y:%T_HOST+6,w:100,h:24],{},"Ping")
+//#font(YF,WF,WF)
+//#ping[%T_PING](%L[x:100,y:%T_HOST+6,w:100%-120,h:24],<? room.host_addr_int | arg ?>)
+
+#font(WF,YF,WF)
+#txt[%L_PLAYERS](%L[x:20,y:%T_HOST+6,w:100,h:24],{},"Players")
+#font(YF,BF,BF)
+#txt[%T_PLAYERS](%L[x:100,y:%T_HOST+6,w:100%-120,h:24],{},<? FILTER arg ~?>
+<?~ IF !room.started ~?><?~ (room.start_players_count || room.players_count)_ "/" _ room.max_players ~?><? END ?>
+<?~ FOREACH player_id IN room.players_time.nsort ~?>
+<?~ IF room.players.$player_id.exited ~?>
+  <?~ SET has_exited_players = 1 ~?>
+<?~ ELSE ~?>
+  <?~ IF !continue_players; SET continue_players = 1 ?> <? ELSE ?>, <? END ~?>
+  <?~ room.players.$player_id.nick ~?>
+<?~ END ~?>
+<?~ END ~?>
+<?~ IF room.ai ?> + AI<? END ~?>
+<?~ END ~?>
+)
+
+<? IF has_exited_players ~?>
+#font(WF,YF,WF)
+#txt[%L_EXPLAYERS](%L[x:20,y:%T_PLAYERS+6,w:100,h:24],{},"Exited")
+#font(YF,BF,BF)
+#txt[%T_EXPLAYERS](%L[x:100,y:%T_PLAYERS+6,w:100%-120,h:24],{},<? FILTER arg ~?>
+<?~ FOREACH player_id IN room.players_time.nsort ~?>
+<?~ IF room.players.$player_id.exited ~?>
+  <?~ IF !continue_explayers; SET continue_explayers = 1 ?> <? ELSE ?>, <? END ~?>
+  <?~ room.players.$player_id.nick ~?>
+<?~ END ~?>
+<?~ END ~?>
+<?~ END ~?>
+)
+<? END ~?>
+
+#font(WF,YF,WF)
+#txt[%L_LEVEL](%L[x:20,y:%T_<? IF has_exited_players ?>EX<? END ?>PLAYERS+6,w:100,h:24],{},"Level")
+#font(YF,WF,WF)
+#txt[%T_LEVEL](%L[x:100,y:%T_<? IF has_exited_players ?>EX<? END ?>PLAYERS+6,w:100%-120,h:24],{},<? 
+  room.level == 3 ? "Hard" :
+  room.level == 2 ? "Normal" :
+  room.level == 1 ? "Easy" :
+  "For all"
+  | arg 
+?>)
+
+#font(WF,YF,WF)
+#txt[%L_CTIME](%L[x:20,y:%T_LEVEL+6,w:100,h:24],{},"<? room.started ? "Started at" : "Created at" ?>")
+#font(YF,WF,WF)
+#txt[%T_CTIME](%L[x:100,y:%T_LEVEL+6,w:100%-120,h:24],{},<? date.format(room.ctime, format => '%Y-%m-%d %H:%M:%S UTC', gmt => 1) _ " (" _ room_time _ ( room.started ? "" : " ago") _ ")" | arg ?>)
+
+<? IF room.passwd != '' ?>
+GW|#font(WF,YF,WF)
+#txt[%L_PASSWD](%L[x:20,y:%T_CTIME+6,w:100,h:24],{},"Password")
+#font(YF,WF,WF)
+#txt[%T_PASSWD](%L[x:100,y:%T_CTIME+6,w:100%-120,h:24],{},"yes")
+<? END ?>
+
+#font(YF,WF,YF)
+
+<? IF room.started ?>
+#sbtn[%B_RGST](%L[x:135,y:100%+5,w:100,h:24],{<? IF backto ?>GW|<? backto ?><? ELSE ?>LW_file&Internet/Cash/cancel.cml<? END ?>},"Cancel")
+<? ELSE ?>
+#sbtn[%B_RGST](%L[x:43,y:100%+5,w:100,h:24],{GW|open&join_game.dcml&ASTATE=<%ASTATE>^VE_RID=<? room.id | cmd ?>},"Join")
+#sbtn[%B_RGST](%L[x:230,y:100%+5,w:100,h:24],{<? IF backto ?>GW|<? backto ?><? ELSE ?>LW_file&Internet/Cash/cancel.cml<? END ?>},"Cancel")
+<? END ?>
+<NGDLG>

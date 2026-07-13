@@ -1,0 +1,70 @@
+#ebox[%BOX](x:100,y:140,w:350,h:<? logged_in ? 80 : !type ? 100 : error ? 158 : 145 ?>)
+#pan[%MPN](%BOX[x:0,y:0,w:100%,h:100%],8)
+
+#font(WF,WF,WF)
+#ctxt[%TIT](%BOX[x:0,y:6,w:100%,h:30],{},"Cossacks Online 1.52")
+
+<? IF logged_in ?>
+  #font(WF,WF,WF)
+  #txt(%BOX[x:10,y:47,w:100%,h:24],{},"<? nick ?>")
+  #btn(%BOX[x:100%-90,y:45,w:80,h:28],{GW|open&try_enter.dcml&RESET=1},"logout")
+<? ELSE ?>
+  <? IF !type ?>
+  #font(WF,WF,WF)
+  #txt(%BOX[x:10,y:52,w:100%,h:24],{},"Your nick:")
+  #font(YF,YF,WF)
+  #pan[%P_NICK](%BOX[x:100,x1:100%-10,y:50,h:24],4)
+  #edit(%BOX[x:100,x1:100%-10,y:48,h:24],{%GV_LCN_NICK})
+  <? ELSE ?>
+  #font(YF,WF,BF)
+  #txt(%BOX[x:10,y:39,w:100%,h:24],{},"Logon with")
+  #font(WF,WF,BF)
+  #apan(%BOX[x:81-3,y:38,w:<? type == 'LCN' ? 73 : 68 ?>,h:20],{GW|url&<? type == 'LCN' ? 'http://127.0.0.1/lang_redir.php' : 'http://127.0.0.1/' ?>&from=enter},14)
+  #txt(%BOX[x:81,y:39,w:100%,h:24],{},"<? type == 'LCN' ? '127.0.0.1' : '127.0.0.1' ?>")
+  #font(YF,WF,BF)
+  #txt(%BOX[x:<? type == 'LCN' ? 153 : 148 ?>,y:39,w:100%,h:24],{},"account:")
+  
+  #font(WF,WF,WF)
+  #txt(%BOX[x:10,y:62,w:100%,h:24],{},"Login")
+  #font(YF,YF,WF)
+  #pan[%P_NICK](%BOX[x:100,x1:100%-10,y:60,h:24],4)
+  #edit(%BOX[x:100,x1:100%-10,y:58,h:24],{%GV_LCN_NICK})
+  
+  #font(WF,WF,WF)
+  #txt(%BOX[x:10,y:93,w:100%,h:24],{},"Password")
+  #font(YF,YF,WF)
+  #pan[%P_NICK](%BOX[x:100,x1:100%-10,y:89,h:24],4)
+  #edit(%BOX[x:100,x1:100%-10,y:87,h:24],{%PASSWORD})
+  
+  <? IF error ?>
+  #font(SYF,SWF,SWF)
+  #txt(%BOX[x:10,y:116,w:100%,h:24],{},"error: <? error ?>")
+  <? END ?>
+  <? END ?>
+  
+  <? IF !type ?>
+  #font(SYF,SYF,SWF)
+  //#txt(%BOX[x:100%-135,w:80,y:100%-23+2,h:24],{},"logon with:")
+  //#apan(%BOX[x:100%-73,w:29,y:100%-23,h:18],{GW|open&enter.dcml&TYPE=LCN},1)
+  //#txt(%BOX[x:100%-69,w:30,y:100%-23+2,h:24],{},"LCN")
+  //#apan(%BOX[x:100%-40,w:29,y:100%-23,h:18],{GW|open&enter.dcml&TYPE=WCL},1)
+  //#txt(%BOX[x:100%-37,w:30,y:100%-23+2,h:24],{},"WCL")
+  <? ELSE ?>
+  #font(SYF,SYF,SWF)
+  #apan(%BOX[x:5,w:108,y:100%-23,h:18],{GW|open&enter.dcml},1)
+  #txt(%BOX[x:8,w:100,y:100%-23+2,h:24],{},"< anonymus logon")
+  
+  #txt(%BOX[x:100%-102,w:80,y:100%-23+2,h:24],{},"login with:")
+  #apan(%BOX[x:100%-40,w:29,y:100%-23,h:18],{GW|open&enter.dcml&TYPE=<? type == 'LCN' ? 'WCL' : 'LCN' ?>},1)
+  #txt(%BOX[x:100%-37,w:30,y:100%-23+2,h:24],{},"<? type == 'LCN' ? 'WCL' : 'LCN' ?>")
+  <? END ?>
+<? END ?>
+
+//#font(WF,WF,WF)
+//#chk(%BOX[x:10,x1:100%,y:%P_NICK+10,h:10],{},"remember",1,0,0)
+
+#font(YF,WF,RF)
+
+#exec(LW_gvar&%HEIGHT&Internet/Cash/height.dat)
+#sbtn[%B_RGST](%BOX[x:0,y:100%+8,w:160,h:24],{GW|go&try_enter&NICK=<%GV_LCN_NICK>&TYPE=<? type ?>&PASSWORD=<%PASSWORD>&LOGGED_IN=<? logged_in ?>&HEIGHT:=&<@%HEIGHT>|LW_lockall},"Enter")
+#sbtn[%B_RGST](%BOX[x:185,y:100%+8,w:160,h:24],{LW_key&#CANCEL|LW_lockall},"Cancel")

@@ -1,0 +1,12 @@
+<NGDLG>
+#exec(LW_lockbox&%LB)
+#ebox[%B](x:200,y:80,w:450,h:185)
+#pan[%MPN](%B[x:0,y:10,w:100%-10,h:100%],8)
+#font(B1F18,WF,WF)
+#ctxt[%TIT](%B[x:0,y:5,w:100%,h:30],{},"<? header ?>")
+#font(YF,YF,YF)
+#ctxt[%L_NAME](%B[x:0,y:48,w:100%,h:100],{},"<? text ?>")
+#font(B1F18,B1F18,B1F18)
+#sbtn[%B_RGST](%B[x:60,y:100%+15,w:100,h:24],{<? command ?>},"<? ok_text ?>")
+#sbtn[%B_RGST](%B[x:275,y:100%+15,w:100,h:24],{LW_file&Internet/Cash/cancel.cml},"Cancel")
+<NGDLG>

@@ -1,0 +1,50 @@
+<NGDLG>
+<? USE CMLStringArgFilter ?>
+<? USE CMDFilter ?>
+<? USE date ?>
+#exec(LW_lockbox&%LBX)
+#exec(LW_enb&0&%RMLST)
+#ebox[%B](x:210,y:40,w:360,h:<? 110 + (player.account ? 20 : 0) + (room ? 50 : 0) ?>)
+#pan[%MPN](%B[x:0,y:0,w:100%,h:100%],8)
+#font(WF,WF,WF)
+#ctxt[%TIT](%B[x:0,y:6,w:100%,h:30],{},"Player Info")
+<? IF h.connection.data.dev ?>
+#rtxt(%B[x:280,y:6,w:70,h:30],{},<? "#" _ player.id | arg ?>)
+<? END ?>
+
+#font(WF,WF,WF)
+#txt[%L_NAME](%B[x:20,y:48,w:100%,h:100],{},"Nick")
+#font(YF,YF,YF)
+#txt[%L_NAME](%B[x:105,y:48,w:100%,h:100],{},"<? player.nick ?>")
+
+#font(WF,YF,WF)
+#txt[%L_CTIME](%B[x:20,y:%L_NAME+6,w:100%,h:100],{},"Connected at")
+#font(YF,WF,WF)
+#txt[%T_CTIME](%B[x:105,y:%L_NAME+6,w:100%,h:100],{},<? date.format(player.connected_at, format => '%Y-%m-%d %H:%M:%S UTC', gmt => 1) _ " (" _ connection_time _ " ago)" | arg ?>)
+
+<? IF player.account ?>
+#font(WF,WF,WF)
+#txt[%L_ACCOUNT](%B[x:20,y:%L_CTIME+6,w:100%,h:100],{},"Logon with")
+#font(WF,WF,WF)
+#apan[%P_ACCOUNT](%B[x:105,y:%L_CTIME+3,w:33,h:20],{<? IF player.account.profile ?>GW|url&<? player.account.profile | cmd ?>&from=user_details<? END ?>},<? player.account.profile ? 14 : 4 ?>)
+#txt[%T_ACCOUNT](%B[x:109,y:%L_CTIME+6,w:33,h:100],{},"<? player.account.type ?>")
+<? IF player.account.type == 'LCN' && h.server.data.lcn_place_by_id.${player.account.id} ?>
+#font(YF,YF,YF)
+#txt(%B[x:145,y:%L_CTIME+6,w:100,h:100],{},"Place:")
+#font(WF,WF,WF)
+#txt(%B[x:181,y:%L_CTIME+6,w:100,h:100],{},<? h.server.data.lcn_place_by_id.${player.account.id} | arg ?>)
+<? END ?>
+<? END ?>
+
+<? IF room ?>
+#font(WF,WF,WF)
+#txt[%L_ROOM](%B[x:20,y:%<? player.account ? "L_ACCOUNT" : "L_CTIME" ?>+6,w:100%,h:100],{},"Room")
+#font(YF,WF,WF)
+#txt[%T_ROOM](%B[x:105,y:%<? player.account ? "L_ACCOUNT" : "L_CTIME" ?>+6,w:100%-120,h:24],{},<? room.title | arg ?>)
+#btn(%B[x:105,y:%T_ROOM,w:44,h:28],{GW|open&join_game.dcml&ASTATE=<%ASTATE>^VE_RID=<? room.id ?>^BACKTO=user_details},"join")
+#btn(%B[x:105+44+2,y:%T_ROOM,w:44,h:28],{GW|open&room_info_dgl.dcml&ASTATE=<%ASTATE>^VE_RID=<? room.id ?>^BACKTO=user_details},"info")
+<? END ?>
+
+#font(YF,WF,RF)
+#sbtn[%B_RGST](%B[xc:50%,y:100%+8,w:160,h:24],{LW_file&Internet/Cash/cancel.cml},"Close")
+<NGDLG>

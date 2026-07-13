@@ -1,0 +1,12 @@
+{
+  "name": "cossacks-master",
+  "version": "1.0.0",
+  "description": "Cossacks: Back to War 1.52 (WASM) master server - single-file, no Docker",
+  "main": "cos_master.js",
+  "scripts": {
+    "start": "node cos_master.js"
+  },
+  "dependencies": {
+    "ws": "^8.21.0"
+  }
+}

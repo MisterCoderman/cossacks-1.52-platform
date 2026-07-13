@@ -1,0 +1,7 @@
+C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/Horizon/Horizon1/Mission_ru.dll
+C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Gogenfridberg.dll
+C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/MarstonMur.dll
+C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Mook.dll
+C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/NewPort.dll
+C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Rymnik.dll
+C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Nerdlingen/nerdlingen.dll

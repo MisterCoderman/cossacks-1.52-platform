@@ -1,0 +1,1682 @@
+[
+ {
+  "name": "AI_Algeria",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Algeria.dll",
+  "base": 268435456,
+  "entry": 268450603,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Austria",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Austria.dll",
+  "base": 268500992,
+  "entry": 268529812,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Bavaria",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Bavaria.dll",
+  "base": 268632064,
+  "entry": 268660724,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Denmark",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Denmark.dll",
+  "base": 268763136,
+  "entry": 268791579,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_England",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/England.dll",
+  "base": 268828672,
+  "entry": 268857364,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_France",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/France.dll",
+  "base": 268959744,
+  "entry": 268988500,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_German",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/German.dll",
+  "base": 269090816,
+  "entry": 269119476,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Holland",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Holland.dll",
+  "base": 269221888,
+  "entry": 269250580,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Piemont",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Piemont.dll",
+  "base": 269352960,
+  "entry": 269381652,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Poland",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Poland.dll",
+  "base": 269484032,
+  "entry": 269512788,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Portugalia",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Portugalia.dll",
+  "base": 269615104,
+  "entry": 269643796,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Russia",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Russia.dll",
+  "base": 269746176,
+  "entry": 269774628,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Saksinia",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Saksinia.dll",
+  "base": 269877248,
+  "entry": 269905940,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Spain",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Spain.dll",
+  "base": 270008320,
+  "entry": 270037012,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Sveden",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Sveden.dll",
+  "base": 270139392,
+  "entry": 270168116,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Switzerland",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Switzerland.dll",
+  "base": 270270464,
+  "entry": 270299316,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Turcia",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Turcia.dll",
+  "base": 270401536,
+  "entry": 270419266,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Ukraine",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Ukraine.dll",
+  "base": 270532608,
+  "entry": 270545595,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Venecia",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Venecia.dll",
+  "base": 270598144,
+  "entry": 270626836,
+  "imagebase": 268435456
+ },
+ {
+  "name": "AI_Vengria",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/ai/Vengria.dll",
+  "base": 270729216,
+  "entry": 270758068,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Algeria_Missal01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Algeria/Missal01/Mission.dll",
+  "base": 270860288,
+  "entry": 270877847,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Algeria_Missal02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Algeria/Missal02/Mission.dll",
+  "base": 270925824,
+  "entry": 270931615,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Algeria_Missal03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Algeria/Missal03/Mission.dll",
+  "base": 270991360,
+  "entry": 271006144,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Algeria_Missal04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Algeria/Missal04/Mission.dll",
+  "base": 271253504,
+  "entry": 271261465,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Algeria_Missal05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Algeria/Missal05/Mission.dll",
+  "base": 271319040,
+  "entry": 271324809,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau01/Mission.dll",
+  "base": 271384576,
+  "entry": 271392105,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau02/Mission.dll",
+  "base": 271450112,
+  "entry": 271459049,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau03/Mission.dll",
+  "base": 271515648,
+  "entry": 271526105,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau04/Mission.dll",
+  "base": 271581184,
+  "entry": 271589771,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau05/Mission.dll",
+  "base": 271646720,
+  "entry": 271656240,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau06",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau06/Mission.dll",
+  "base": 271908864,
+  "entry": 271913736,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau07",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau07/Mission.dll",
+  "base": 271974400,
+  "entry": 271981737,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau08",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau08/Mission.dll",
+  "base": 272039936,
+  "entry": 272049456,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau09",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau09/Mission.dll",
+  "base": 272105472,
+  "entry": 272124553,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Austria_Missau10",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Austria/Missau10/Mission.dll",
+  "base": 272171008,
+  "entry": 272177782,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_England_Missen01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/England/Missen01/Mission.dll",
+  "base": 272236544,
+  "entry": 272252256,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_England_Missen02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/England/Missen02/Mission.dll",
+  "base": 272498688,
+  "entry": 272516384,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_England_Missen03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/England/Missen03/Mission.dll",
+  "base": 272760832,
+  "entry": 272779344,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_England_Missen04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/England/Missen04/Mission.dll",
+  "base": 273022976,
+  "entry": 273030528,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_England_Missen05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/England/Missen05/Mission.dll",
+  "base": 273285120,
+  "entry": 273291008,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_England_Missen06",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/England/Missen06/Mission.dll",
+  "base": 273547264,
+  "entry": 273555600,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_England_Missen07",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/England/Missen07/Mission.dll",
+  "base": 273809408,
+  "entry": 273820288,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_England_Missen08",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/England/Missen08/Mission.dll",
+  "base": 274071552,
+  "entry": 274082160,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr01/Mission.dll",
+  "base": 274333696,
+  "entry": 274356032,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr02/Mission.dll",
+  "base": 274595840,
+  "entry": 274611168,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr03/Mission.dll",
+  "base": 274857984,
+  "entry": 274863952,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr04/Mission.dll",
+  "base": 275120128,
+  "entry": 275129104,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr05/Mission.dll",
+  "base": 275382272,
+  "entry": 275390832,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr06",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr06/Mission.dll",
+  "base": 275644416,
+  "entry": 275654048,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr07",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr07/Mission.dll",
+  "base": 275906560,
+  "entry": 275917168,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr07A",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr07A/Mission.dll",
+  "base": 276168704,
+  "entry": 276182960,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr08",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr08/Mission.dll",
+  "base": 276430848,
+  "entry": 276442656,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_France_Missfr09",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/France/Missfr09/Mission.dll",
+  "base": 276692992,
+  "entry": 276708992,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Poland_Misspo01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Poland/Misspo01/Mission.dll",
+  "base": 276955136,
+  "entry": 276971063,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Poland_Misspo02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Poland/Misspo02/Mission.dll",
+  "base": 277020672,
+  "entry": 277040208,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Poland_Misspo03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Poland/Misspo03/Mission.dll",
+  "base": 277282816,
+  "entry": 277296144,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Poland_Misspo04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Poland/Misspo04/Mission.dll",
+  "base": 277544960,
+  "entry": 277556128,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Poland_Misspo05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Poland/Misspo05/Mission.dll",
+  "base": 277807104,
+  "entry": 277819888,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Prussia_Misspru01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Prussia/Misspru01/Mission.dll",
+  "base": 278069248,
+  "entry": 278081081,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Prussia_Misspru02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Prussia/Misspru02/Mission.dll",
+  "base": 278134784,
+  "entry": 278149963,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Prussia_Misspru03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Prussia/Misspru03/Mission.dll",
+  "base": 278200320,
+  "entry": 278225433,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Prussia_Misspru04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Prussia/Misspru04/Mission.dll",
+  "base": 278265856,
+  "entry": 278281609,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Prussia_Misspru05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Prussia/Misspru05/Mission.dll",
+  "base": 278331392,
+  "entry": 278339785,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Russia_Missru01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Russia/Missru01/Mission.dll",
+  "base": 278396928,
+  "entry": 278416656,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Russia_Missru02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Russia/Missru02/Mission.dll",
+  "base": 278659072,
+  "entry": 278675632,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Russia_Missru03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Russia/Missru03/Mission.dll",
+  "base": 278921216,
+  "entry": 278940256,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Russia_Missru04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Russia/Missru04/Mission.dll",
+  "base": 279183360,
+  "entry": 279196560,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Russia_Missru05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Russia/Missru05/Mission.dll",
+  "base": 279445504,
+  "entry": 279458304,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Russia_Missru06",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Russia/Missru06/Mission.dll",
+  "base": 279707648,
+  "entry": 279719584,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Russia_Missru07",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Russia/Missru07/Mission.dll",
+  "base": 279969792,
+  "entry": 279980608,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Russia_Missru08",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Russia/Missru08/Mission.dll",
+  "base": 280231936,
+  "entry": 280239760,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Saxony_Missax01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Saxony/Missax01/Mission.dll",
+  "base": 280494080,
+  "entry": 280503065,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Saxony_Missax02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Saxony/Missax02/Mission.dll",
+  "base": 280559616,
+  "entry": 280569193,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Saxony_Missax03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Saxony/Missax03/Mission.dll",
+  "base": 280625152,
+  "entry": 280633017,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Saxony_Missax04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Saxony/Missax04/Mission.dll",
+  "base": 280690688,
+  "entry": 280703337,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Saxony_Missax05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Saxony/Missax05/Mission.dll",
+  "base": 280756224,
+  "entry": 280765177,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single01/Mission.dll",
+  "base": 280821760,
+  "entry": 280827552,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single02/Mission.dll",
+  "base": 281083904,
+  "entry": 281089808,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single03/Mission.dll",
+  "base": 281346048,
+  "entry": 281351392,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single04/Mission.dll",
+  "base": 281608192,
+  "entry": 281613904,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single05/Mission.dll",
+  "base": 281870336,
+  "entry": 281875712,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single06",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single06/Mission.dll",
+  "base": 282132480,
+  "entry": 282140480,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single07",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single07/Mission.dll",
+  "base": 282394624,
+  "entry": 282409168,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single08",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single08/Mission.dll",
+  "base": 282656768,
+  "entry": 282664080,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single09",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single09/Mission.dll",
+  "base": 282918912,
+  "entry": 282929408,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Single_Single10",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Single/Single10/Mission.dll",
+  "base": 283181056,
+  "entry": 283187568,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single1",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single1/Mission.dll",
+  "base": 283443200,
+  "entry": 283465040,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single10",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single10/Mission.dll",
+  "base": 283705344,
+  "entry": 283713024,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single100",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single100/Mission.dll",
+  "base": 283967488,
+  "entry": 284008592,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single101",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single101/Mission.dll",
+  "base": 284295168,
+  "entry": 284310850,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single102",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single102/Mission.dll",
+  "base": 284491776,
+  "entry": 284506368,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single103",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single103/Mission.dll",
+  "base": 284753920,
+  "entry": 284780928,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single104",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single104/Mission.dll",
+  "base": 285016064,
+  "entry": 285051392,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single105",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single105/Mission.dll",
+  "base": 285278208,
+  "entry": 285294496,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single106",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single106/Mission.dll",
+  "base": 285540352,
+  "entry": 285578352,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single107",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single107/Mission.dll",
+  "base": 285802496,
+  "entry": 285815328,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single11",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single11/Mission.dll",
+  "base": 286064640,
+  "entry": 286071193,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single12",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single12/Mission.dll",
+  "base": 286130176,
+  "entry": 286143067,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single13",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single13/Mission.dll",
+  "base": 286261248,
+  "entry": 286270384,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single14",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single14/Mission.dll",
+  "base": 286523392,
+  "entry": 286530649,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single15",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single15/Mission.dll",
+  "base": 286588928,
+  "entry": 286614480,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single16",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single16/Mission.dll",
+  "base": 286851072,
+  "entry": 286860353,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single17",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single17/Mission.dll",
+  "base": 286916608,
+  "entry": 286933536,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single18",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single18/Mission.dll",
+  "base": 287178752,
+  "entry": 287194203,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single19",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single19/Mission.dll",
+  "base": 287309824,
+  "entry": 287318976,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single2",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single2/Mission.dll",
+  "base": 287571968,
+  "entry": 287617424,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single20",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single20/Mission.dll",
+  "base": 287899648,
+  "entry": 287908585,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single21",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single21/Mission.dll",
+  "base": 287965184,
+  "entry": 287984315,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single22",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single22/Mission.dll",
+  "base": 288096256,
+  "entry": 288108192,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single23",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single23/Mission.dll",
+  "base": 288358400,
+  "entry": 288379936,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single24",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single24/Mission.dll",
+  "base": 288620544,
+  "entry": 288629184,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single25",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single25/Mission.dll",
+  "base": 288882688,
+  "entry": 288892962,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single26",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single26/Mission.dll",
+  "base": 288948224,
+  "entry": 288969616,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single27",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single27/Mission.dll",
+  "base": 289210368,
+  "entry": 289221536,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single28",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single28/Mission.dll",
+  "base": 289472512,
+  "entry": 289494267,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single29",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single29/Mission.dll",
+  "base": 289603584,
+  "entry": 289617043,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single3",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single3/Mission.dll",
+  "base": 289669120,
+  "entry": 289698672,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single30",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single30/Mission.dll",
+  "base": 289931264,
+  "entry": 289949200,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single31",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single31/Mission.dll",
+  "base": 290193408,
+  "entry": 290234992,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single32",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single32/Mission.dll",
+  "base": 290521088,
+  "entry": 290544569,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single33",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single33/Mission.dll",
+  "base": 290586624,
+  "entry": 290613056,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single34",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single34/Mission.dll",
+  "base": 290848768,
+  "entry": 290868656,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single35",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single35/Mission.dll",
+  "base": 291110912,
+  "entry": 291127504,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single36",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single36/Mission.dll",
+  "base": 291373056,
+  "entry": 291382131,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single37",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single37/Mission.dll",
+  "base": 291438592,
+  "entry": 291448978,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single38",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single38/Mission.dll",
+  "base": 291504128,
+  "entry": 291519008,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single39",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single39/Mission.dll",
+  "base": 291766272,
+  "entry": 291786544,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single4",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single4/Mission.dll",
+  "base": 292028416,
+  "entry": 292036580,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single40",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single40/Mission.dll",
+  "base": 292093952,
+  "entry": 292137872,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single41",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single41/Mission.dll",
+  "base": 292421632,
+  "entry": 292433040,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single42",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single42/Mission.dll",
+  "base": 292683776,
+  "entry": 292696368,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single43",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single43/Mission.dll",
+  "base": 292945920,
+  "entry": 292953465,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single44",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single44/Mission.dll",
+  "base": 293011456,
+  "entry": 293017609,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single45",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single45/Mission.dll",
+  "base": 293076992,
+  "entry": 293083545,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single46",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single46/Mission.dll",
+  "base": 293142528,
+  "entry": 293178144,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single47",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single47/Mission.dll",
+  "base": 293404672,
+  "entry": 293411177,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single48",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single48/Mission.dll",
+  "base": 293470208,
+  "entry": 293476761,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single49",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single49/Mission.dll",
+  "base": 293535744,
+  "entry": 293557968,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single5",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single5/Mission.dll",
+  "base": 293797888,
+  "entry": 293808321,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single50",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single50/Mission.dll",
+  "base": 293928960,
+  "entry": 293958992,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single51",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single51/Mission.dll",
+  "base": 294191104,
+  "entry": 294215792,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single52",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single52/Mission.dll",
+  "base": 294453248,
+  "entry": 294461197,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single53",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single53/Mission.dll",
+  "base": 294518784,
+  "entry": 294537872,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single54",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single54/Mission.dll",
+  "base": 294715392,
+  "entry": 294723609,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single55",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single55/Mission.dll",
+  "base": 294780928,
+  "entry": 294791280,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single56",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single56/Mission.dll",
+  "base": 294846464,
+  "entry": 294877520,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single57",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single57/Mission.dll",
+  "base": 295108608,
+  "entry": 295134688,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single58",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single58/Mission.dll",
+  "base": 295370752,
+  "entry": 295393120,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single59",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single59/Mission.dll",
+  "base": 295632896,
+  "entry": 295638505,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single6",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single6/Mission.dll",
+  "base": 295698432,
+  "entry": 295712210,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single60",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single60/Mission.dll",
+  "base": 295763968,
+  "entry": 295770073,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single61",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single61/Mission.dll",
+  "base": 295829504,
+  "entry": 295847451,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single62",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single62/Mission.dll",
+  "base": 295960576,
+  "entry": 295977195,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single63",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single63/Mission.dll",
+  "base": 296091648,
+  "entry": 296101604,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single64",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single64/Mission.dll",
+  "base": 296157184,
+  "entry": 296170440,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single65",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single65/Mission.dll",
+  "base": 296222720,
+  "entry": 296248912,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single66",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single66/Mission.dll",
+  "base": 296484864,
+  "entry": 296511472,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single67",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single67/Mission.dll",
+  "base": 296747008,
+  "entry": 296757609,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single68",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single68/Mission.dll",
+  "base": 296812544,
+  "entry": 296826468,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single69",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single69/Mission.dll",
+  "base": 296943616,
+  "entry": 296968800,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single7",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single7/Mission.dll",
+  "base": 297205760,
+  "entry": 297226491,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single70",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single70/Mission.dll",
+  "base": 297336832,
+  "entry": 297374016,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single71",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single71/Mission.dll",
+  "base": 297664512,
+  "entry": 297679168,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single72",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single72/Mission.dll",
+  "base": 297926656,
+  "entry": 297933001,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single73",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single73/Mission.dll",
+  "base": 297992192,
+  "entry": 298006522,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single74",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single74/Mission.dll",
+  "base": 298188800,
+  "entry": 298205839,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single75",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single75/Mission.dll",
+  "base": 298385408,
+  "entry": 298394601,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single76",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single76/Mission.dll",
+  "base": 298450944,
+  "entry": 298457860,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single77",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single77/Mission.dll",
+  "base": 298516480,
+  "entry": 298525726,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single78",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single78/Mission.dll",
+  "base": 298582016,
+  "entry": 298622512,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single79",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single79/Mission.dll",
+  "base": 298909696,
+  "entry": 298922246,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single8",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single8/Mission.dll",
+  "base": 299106304,
+  "entry": 299123184,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single80",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single80/Mission.dll",
+  "base": 299368448,
+  "entry": 299386960,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single81",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single81/Mission.dll",
+  "base": 299630592,
+  "entry": 299639977,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single82",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single82/Mission.dll",
+  "base": 299696128,
+  "entry": 299704441,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single83",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single83/Mission.dll",
+  "base": 299761664,
+  "entry": 299769140,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single84",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single84/Mission.dll",
+  "base": 299827200,
+  "entry": 299870144,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single85",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single85/Mission.dll",
+  "base": 300154880,
+  "entry": 300189648,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single86",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single86/Mission.dll",
+  "base": 300417024,
+  "entry": 300426625,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single87",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single87/Mission.dll",
+  "base": 300548096,
+  "entry": 300558200,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single88",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single88/Mission.dll",
+  "base": 300613632,
+  "entry": 300634784,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single89",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single89/Mission.dll",
+  "base": 300875776,
+  "entry": 300917808,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single9",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single9/Mission.dll",
+  "base": 301203456,
+  "entry": 301210633,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single90",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single90/Mission.dll",
+  "base": 301268992,
+  "entry": 301285278,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single91",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single91/Mission.dll",
+  "base": 301400064,
+  "entry": 301408041,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single92",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single92/Mission.dll",
+  "base": 301465600,
+  "entry": 301472297,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single93",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single93/Mission.dll",
+  "base": 301531136,
+  "entry": 301552240,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single94",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single94/Mission.dll",
+  "base": 301793280,
+  "entry": 301833008,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single95",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single95/Mission.dll",
+  "base": 302120960,
+  "entry": 302144976,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single96",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single96/Mission.dll",
+  "base": 302383104,
+  "entry": 302401152,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single97",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single97/Mission.dll",
+  "base": 302645248,
+  "entry": 302691824,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single98",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single98/Mission.dll",
+  "base": 302972928,
+  "entry": 302992126,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_Single99",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles/Single99/Mission.dll",
+  "base": 303104000,
+  "entry": 303131616,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_aow_Single1",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles_aow/Single1/Mission.dll",
+  "base": 303366144,
+  "entry": 303380736,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_aow_Single2",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles_aow/Single2/Mission.dll",
+  "base": 303628288,
+  "entry": 303655296,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_aow_Single3",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles_aow/Single3/Mission.dll",
+  "base": 303890432,
+  "entry": 303925760,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_aow_Single4",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles_aow/Single4/Mission.dll",
+  "base": 304152576,
+  "entry": 304168864,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_aow_Single5",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles_aow/Single5/Mission.dll",
+  "base": 304414720,
+  "entry": 304452720,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Singles_aow_Single6",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Singles_aow/Single6/Mission.dll",
+  "base": 304676864,
+  "entry": 304689696,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Tutorial_Misstu01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Tutorial/Misstu01/Mission.dll",
+  "base": 304939008,
+  "entry": 304959184,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Tutorial_Misstu02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Tutorial/Misstu02/Mission.dll",
+  "base": 305201152,
+  "entry": 305218384,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Tutorial_Misstu03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Tutorial/Misstu03/Mission.dll",
+  "base": 305463296,
+  "entry": 305476144,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Tutorial_Tutorial1",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Tutorial/Tutorial1/Mission.dll",
+  "base": 305725440,
+  "entry": 305739568,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Tutorial_Tutorial2",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Tutorial/Tutorial2/Mission.dll",
+  "base": 305987584,
+  "entry": 306008672,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Tutorial_Tutorial3",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Tutorial/Tutorial3/Mission.dll",
+  "base": 306249728,
+  "entry": 306272432,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Tutorial_Tutorial4",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Tutorial/Tutorial4/Mission.dll",
+  "base": 306511872,
+  "entry": 306538128,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Tutorial_Tutorial5",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Tutorial/Tutorial5/Mission.dll",
+  "base": 306774016,
+  "entry": 306803504,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Ukraine_Missuk01",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Ukraine/Missuk01/Mission.dll",
+  "base": 307036160,
+  "entry": 307099696,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Ukraine_Missuk02",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Ukraine/Missuk02/Mission.dll",
+  "base": 307363840,
+  "entry": 307393808,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Ukraine_Missuk03",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Ukraine/Missuk03/Mission.dll",
+  "base": 307625984,
+  "entry": 307663376,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Ukraine_Missuk04",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Ukraine/Missuk04/Mission.dll",
+  "base": 307888128,
+  "entry": 307916672,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Ukraine_Missuk05",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Ukraine/Missuk05/Mission.dll",
+  "base": 308150272,
+  "entry": 308199136,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Ukraine_Missuk06",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Ukraine/Missuk06/Mission.dll",
+  "base": 308412416,
+  "entry": 308421712,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_missions_Ukraine_Missuk07",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/missions/Ukraine/Missuk07/Mission.dll",
+  "base": 308674560,
+  "entry": 308688096,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_Horizon_Horizon2",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/Horizon/Horizon2/Mission.dll",
+  "base": 309460992,
+  "entry": 309478176,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_Horizon_Horizon3",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/Horizon/Horizon3/Mission.dll",
+  "base": 309723136,
+  "entry": 309738352,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_Horizon_Horizon4",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/Horizon/Horizon4/Mission.dll",
+  "base": 309985280,
+  "entry": 309999088,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_Horizon_Horizon5",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/Horizon/Horizon5/Mission.dll",
+  "base": 310247424,
+  "entry": 310280912,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Breitenfeld",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Breitenfeld/History1.dll",
+  "base": 310509568,
+  "entry": 310516144,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Gangut",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Gangut/History2.dll",
+  "base": 310968320,
+  "entry": 310979504,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Gohshted",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Gohshted/History3.dll",
+  "base": 311427072,
+  "entry": 311433648,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Kunersdorf",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Kunersdorf/kunersdorf.dll",
+  "base": 311689216,
+  "entry": 311695808,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Leiten",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Leiten/leiten.dll",
+  "base": 311951360,
+  "entry": 311957280,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Lucen",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Lucen/History5.dll",
+  "base": 312213504,
+  "entry": 312220816,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Malplake",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Malplake/malplake.dll",
+  "base": 312475648,
+  "entry": 312481680,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Narva",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Narva/narva.dll",
+  "base": 313131008,
+  "entry": 313137312,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Poltava",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Poltava/poltava.dll",
+  "base": 314114048,
+  "entry": 314124352,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Vittshtok",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Vittshtok/vittshtok.dll",
+  "base": 314572800,
+  "entry": 314580112,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_w_mount",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/w_mount/History.dll",
+  "base": 314834944,
+  "entry": 314841536,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_usermissions",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/usermissions/CMS_Start.dll",
+  "base": 315097088,
+  "entry": 315121033,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_Horizon_Horizon1_Mission",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/Horizon/Horizon1/Mission.dll",
+  "base": 315293696,
+  "entry": 315306016,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_Horizon_Horizon1_Mission_ru",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/Horizon/Horizon1/Mission_ru.dll",
+  "base": 315555840,
+  "entry": 315568160,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Denbar",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Denbar.dll",
+  "base": 315817984,
+  "entry": 315823680,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Gogenfridberg",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Gogenfridberg.dll",
+  "base": 316014592,
+  "entry": 316021744,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_MarstonMur",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/MarstonMur.dll",
+  "base": 316211200,
+  "entry": 316218032,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Mook",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Mook.dll",
+  "base": 316407808,
+  "entry": 316417888,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Nerdlingen_History5",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Nerdlingen/History5.dll",
+  "base": 316604416,
+  "entry": 316617776,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Nerdlingen_nerdlingen",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Nerdlingen/nerdlingen.dll",
+  "base": 316866560,
+  "entry": 316873872,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_NewPort",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/NewPort.dll",
+  "base": 317128704,
+  "entry": 317137600,
+  "imagebase": 268435456
+ },
+ {
+  "name": "M_history_battl_Rymnik",
+  "dll": "C:/123/Cossacks/Cossacks Back to War v1.52 Classic Edition/history_battl/Rymnik.dll",
+  "base": 317325312,
+  "entry": 317336416,
+  "imagebase": 268435456
+ }
+]

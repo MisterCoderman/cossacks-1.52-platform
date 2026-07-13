@@ -1,0 +1,3 @@
+//#exec(LW_cfile&Cookie\5C%GV_LCN_PROF&123\00)
+#exec(LW_key&keykey)
+#exec(LW_gvar&%PROF&<? id ?>&%NAME&n/a&%NICK&<? P.NICK ?>&%MAIL&n/a&%PASS&n/a&%GMID&-&%CHAT&<? server.config.chat_server ?>)

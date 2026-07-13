@@ -1,0 +1,14 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/GSC-Server.t
+lib/GSC/Server.pm
+lib/GSC/Server/ConnectionController.pm
+lib/GSC/Server/CommandController.pm
+lib/GSC/Server/User.pm
+lib/GSC/Server/Connection.pm
+lib/GSC/Server/Handler.pm
+lib/GSC/Server/Request.pm
+lib/GSC/Server/Logger.pm
+lib/GSC/Server/Bridge/HTTP.pm

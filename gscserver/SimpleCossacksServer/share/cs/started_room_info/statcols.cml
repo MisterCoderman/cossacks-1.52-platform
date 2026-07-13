@@ -1,0 +1,194 @@
+<INFOTBL>
+<? SET table.top = 81 ~?>
+<? SET table.left = 6 ~?>
+<? SET table.width.nick = 138 ~?>
+<? SET table.width.nation = 78 ~?>
+<? SET table.width.score = 45 ~?>
+<? SET table.width.population = 42 ~?>
+<? SET table.width.smallcol = page == 1 ? (res ? 43 : 49) : ( page == 2 ? (res ? 57 : 66) : 51 ) ~?>
+<? SET table.width.largecol = page == 1 ? 54 : 61 ~?>
+<? SET table.row_height = 22 ~?>
+
+<? left_offset = table.left
+  + table.width.nick - 1 + 21 * 2
+  + table.width.nation - 1
+  + table.width.score - 1
+  + table.width.population - 1
+~?>
+<? offsetx = left_offset ~?>
+
+<? IF page == 1 ?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+wood")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+food")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+stone")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+gold")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+iron")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+coal")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? IF res ?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+res")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? END ?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+popul")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.largecol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.largecol ?>],{},"*casuality")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? ELSIF page == 2 ?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"*wood")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"*food")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"*stone")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"*gold")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"*iron")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"*coal")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? IF res ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"*res")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? END ~?>
+<? ELSIF page == 3 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+units")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+peasants")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.smallcol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.smallcol ?>],{},"+popul")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.largecol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.largecol ?>],{},"*units")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.largecol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.largecol ?>],{},"*peasants")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.largecol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.largecol ?>],{},"*popul")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.largecol ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.largecol ?>],{},"*casuality")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+<? END ~?>
+
+<? offsety = table.top ~?>
+<?~ FOREACH player IN room.started_players ~?>
+<? offsetx = left_offset ~?>
+<? IF page == 1 ?>
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_wood ?><? player.stat.change_wood | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_food ?><? player.stat.change_food | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_stone ?><? player.stat.change_stone | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_gold ?><? player.stat.change_gold | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_iron ?><? player.stat.change_iron | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_coal ?><? player.stat.change_coal | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? IF res ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_coal ?><? player.stat.change_coal | format("%.0f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? END ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:22],{},"<? IF !player.zombie || player.stat.change_population2 ?><? player.stat.change_population2 | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.largecol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.largecol ?>,h:22],{},"<? IF !player.zombie || player.stat.casuality ?><? player.stat.casuality >= 0 ? player.stat.casuality : 0 ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+<? ELSIF page == 2 ?>
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.wood ?><? player.stat.wood ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.food ?><? player.stat.food ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.stone ?><? player.stat.stone ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.gold ?><? player.stat.gold ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.iron ?><? player.stat.iron ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.coal ?><? player.stat.coal ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? IF res ?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.coal ?><? player.stat.coal ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+<? END ?>
+<? ELSIF page == 3 ?>
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_units ?><? player.stat.change_units | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_peasants ?><? player.stat.change_peasants | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.smallcol ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.change_population2 ?><? player.stat.change_population2 | format("%.1f") ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.smallcol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.largecol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.largecol ?>,h:22],{},"<? IF !player.zombie || player.stat.units ?><? player.stat.units ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.largecol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.largecol ?>,h:22],{},"<? IF !player.zombie || player.stat.peasants ?><? player.stat.peasants ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.largecol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.largecol ?>,h:22],{},"<? IF !player.zombie || player.stat.population2 ?><? player.stat.population2 ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+#pan(%LBX[x:<? offsetx  ?>,y:<? offsety ?>,w:<? table.width.largecol ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.largecol ?>,h:22],{},"<? IF !player.zombie || player.stat.casuality ?><? player.stat.casuality >=0 ? player.stat.casuality : 0 ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.largecol - 1 ~?>
+<? END ~?>
+<? offsety = offsety + table.row_height - (loop.first ? 1 : 0) ~?>
+<? END ~?>
+
+<? offsety = 32 ?>
+<? offsetx = 613 ?>
+#font(YF,YF,YF)
+//#txt(%LBX[x:338,y:<? offsety + 9 ?>,w:100%,h:40],{},"show resources in terms of:")
+//#cbb(%LBX[x:508,y:<? offsety + 5 ?>,w:100,h:24],{%GV_LCN_INFR}{LW_show&:GW\7Cgo\26room_info_dgl\26VE_RID=<? room.id ?>\26part=statcols\26res=<%GV_LCN_INFR>\26page=<? page ?>},--,gold,iron/coal,wood/stone,food,0)
+#apan(%LBX[x:<? offsetx ?>,y:<? offsety + 5 ?>,w:40,h:22],{<? IF page != 1 ?>GW|go&room_info_dgl&VE_RID=<? room.id ?>&part=statcols&res=<%GV_LCN_INFR>&page=1<? END ?>},<? page == 1 ? 5 : 2 ?>)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 8 ?>,w:40,h:22],{},"1")
+<? offsetx = offsetx + 42 ?>
+#apan(%LBX[x:<? offsetx ?>,y:<? offsety + 5 ?>,w:40,h:22],{<? IF page != 2 ?>GW|go&room_info_dgl&VE_RID=<? room.id ?>&part=statcols&res=<%GV_LCN_INFR>&page=2<? END ?>},<? page == 2 ? 5 : 2 ?>)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 8 ?>,w:40,h:22],{},"2")
+<? offsetx = offsetx + 42 ?>
+#apan(%LBX[x:<? offsetx ?>,y:<? offsety + 5 ?>,w:40,h:22],{<? IF page != 3 ?>GW|go&room_info_dgl&VE_RID=<? room.id ?>&part=statcols&res=<%GV_LCN_INFR>&page=3<? END ?>},<? page == 3 ? 5 : 2 ?>)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 8 ?>,w:40,h:22],{},"3")
+<INFOTBL>

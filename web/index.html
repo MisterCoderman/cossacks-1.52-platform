@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cossacks: Back to War — 1.52</title>
+<style>
+  html,body{height:100%;margin:0}
+  body{
+    background:#1a1712 radial-gradient(ellipse at 50% -20%, #3b3324 0%, #14110c 70%);
+    color:#e8dcc0; font-family:Georgia,'Times New Roman',serif;
+    display:flex; align-items:center; justify-content:center; min-height:100vh;
+  }
+  .card{text-align:center; padding:2rem}
+  h1{font-size:2.4rem; margin:0 0 .2rem; letter-spacing:.04em;
+     color:#f0d99b; text-shadow:0 2px 6px #000}
+  h1 .ver{font-size:1.3rem; color:#a99a78; font-weight:normal; vertical-align:middle}
+  .sub{color:#a99a78; margin:0 0 2.2rem; font-size:1rem; font-style:italic}
+  .langs{display:flex; gap:1.4rem; justify-content:center; flex-wrap:wrap}
+  a.lang{
+    display:block; width:190px; padding:1.3rem 1rem; text-decoration:none;
+    color:#f3e8c8; background:linear-gradient(#4a3f2b,#332b1d);
+    border:1px solid #6b5a3a; border-radius:10px;
+    box-shadow:0 4px 14px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,240,200,.15);
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s;
+  }
+  a.lang:hover{transform:translateY(-3px); border-color:#c8a45a;
+     box-shadow:0 8px 22px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,240,200,.25)}
+  a.lang .flag{line-height:0; margin-bottom:.35rem}
+  a.lang .flag svg{width:3.6rem; height:auto; border-radius:3px;
+     box-shadow:0 1px 4px rgba(0,0,0,.6); vertical-align:middle}
+  a.lang .name{margin-top:.5rem; font-size:1.25rem; letter-spacing:.03em}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Cossacks: Back to War <span class="ver">v1.52</span></h1>
+    <p class="sub">Choose a version to load · Выберите версию</p>
+    <div class="langs">
+      <a class="lang" href="dmcr.html?lang=en">
+        <div class="flag"><svg viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-label="English">
+          <clipPath id="gbc"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+          <clipPath id="gbt"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+          <g clip-path="url(#gbc)">
+            <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+            <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+            <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#gbt)" stroke="#C8102E" stroke-width="4"/>
+            <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+            <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+          </g></svg></div>
+        <div class="name">English</div>
+      </a>
+      <a class="lang" href="dmcr.html?lang=ru">
+        <div class="flag"><svg viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-label="Русская">
+          <rect width="30" height="20" fill="#fff"/>
+          <rect y="6.667" width="30" height="13.333" fill="#0039A6"/>
+          <rect y="13.333" width="30" height="6.667" fill="#D52B1E"/>
+        </svg></div>
+        <div class="name">Русская</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

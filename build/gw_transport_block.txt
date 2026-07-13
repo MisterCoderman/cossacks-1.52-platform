@@ -1,0 +1,103 @@
+#ifdef __EMSCRIPTEN__
+// GW device transport to the native rloger GSC server (GSC::Server + SimpleCossacksServer),
+// tunneled by web/cos_gsc.js -> server/cos_master.js's /cossacks-gsc bridge. This replaces the
+// original gw_server.dll: FilterRQ2Send has already appended win(GID)+key(ACCESSKEY) as the last
+// two args of every command, so `request` here is exactly the GSC::CommandSet wire payload the Perl
+// server expects. We only tag it with num/ver/lang; the bridge does the GSC-Stream framing + zlib
+// and returns the reply payload (LW_* commands), which the SXP layer Extract()s unchanged.
+extern "C" void cosgsc_send( int num, int ver, int lang, char* payload, int len );
+extern "C" int cosgsc_poll( int num );
+extern "C" int cosgsc_recv( int num, char* buf, int cap );
+
+// Cossacks: Back to War. ROOMS group by ROOMS_V<ver> and the server picks cs/ (Cossacks) templates
+// for any ver not in {3,8,10} (those are American Conquest). All web clients send the same ver, so
+// they all share one room table and see each other.
+#define GSC_VER  2
+#define GSC_LANG 0
+
+struct GW_Req
+{
+	DWORD Handle;
+	DWORD Num;
+	DWORD StartedAt;
+	char* Result;
+	int   ResultSize;
+};
+
+static GW_Req* GW_REQ = nullptr;
+static int GW_NREQ = 0;
+static int GW_MAXREQ = 0;
+static DWORD GW_NEXT_HANDLE = 1;
+static DWORD GW_NEXT_NUM = 1;
+
+DWORD GW_SendRequest( char* request, int size )
+{
+	if (GW_NREQ >= GW_MAXREQ)
+	{
+		GW_MAXREQ += 16;
+		GW_REQ = (GW_Req*) realloc( GW_REQ, GW_MAXREQ * sizeof(GW_Req) );
+	}
+	GW_Req* R = GW_REQ + GW_NREQ++;
+	memset( R, 0, sizeof *R );
+	R->Handle = GW_NEXT_HANDLE++;
+	// num is a u16 on the wire and must never be 0 (the server warns on num==0)
+	if (GW_NEXT_NUM == 0 || GW_NEXT_NUM > 0xFFFF) GW_NEXT_NUM = 1;
+	R->Num = GW_NEXT_NUM++;
+	R->StartedAt = GetTickCount();
+	cosgsc_send( (int) R->Num, GSC_VER, GSC_LANG, request, size );
+	return R->Handle;
+}
+
+DWORD GW_GetRequestResult( DWORD Handle, char** Result, int* Size )
+{
+	for (int i = 0; i < GW_NREQ; i++)if (GW_REQ[i].Handle == Handle)
+	{
+		GW_Req* R = GW_REQ + i;
+		if (!R->Result)
+		{
+			int n = cosgsc_poll( (int) R->Num );
+			if (n >= 0)
+			{
+				R->Result = (char*) malloc( n > 0 ? n : 1 );
+				cosgsc_recv( (int) R->Num, R->Result, n );
+				R->ResultSize = n;
+			}
+		}
+		if (R->Result)
+		{
+			*Result = R->Result;
+			*Size = R->ResultSize;
+			return 128;
+		}
+		if (GetTickCount() - R->StartedAt > 30000)
+		{
+			printf( "[GSC] GW request TIMEOUT handle=%u num=%u\n", (unsigned) Handle, (unsigned) R->Num );
+			return 1;
+		}
+		return 0;
+	}
+	return 1;
+}
+
+void GW_CloseRequest( DWORD Handle )
+{
+	for (int i = 0; i < GW_NREQ; i++)if (GW_REQ[i].Handle == Handle)
+	{
+		if (GW_REQ[i].Result)free( GW_REQ[i].Result );
+		if (i < GW_NREQ - 1)memmove( GW_REQ + i, GW_REQ + i + 1, ( GW_NREQ - i - 1 ) * sizeof(GW_Req) );
+		GW_NREQ--;
+		return;
+	}
+}
+
+void GW_Process() {}
+
+void GW_CloseAll()
+{
+	for (int i = 0; i < GW_NREQ; i++)if (GW_REQ[i].Result)free( GW_REQ[i].Result );
+	free( GW_REQ );
+	GW_REQ = nullptr;
+	GW_NREQ = 0;
+	GW_MAXREQ = 0;
+}
+#endif

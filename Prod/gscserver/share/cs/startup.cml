@@ -1,0 +1,92 @@
+<?~ SET bottom_height = 32 ~?>
+<?~ USE POSIX ~?>
+<?~ USE CMLStringArgFilter ~?>
+<?~ USE CMDFilter ~?>
+#resize(LW_cfile&<#WinH#>&height.dat|LW_show&<\52ESIZE>
+#exec(GW\7Copen\26resize\26height=<#WinH#>\29
+<\52ESIZE>)
+
+#def_panel(15,Internet/pix/i_bor%d,48,49,50,51,52,53,55,54,67,45)
+#font(YF,WF,WF)
+#box[%BOTTOM](x:0,w:100%,y:100%-<? bottom_height ?>,h:<? bottom_height ?>)
+#pan(%BOTTOM[x:0-1,w:100%+2,y:0-1,h:100%+2],1)
+#btn(%BOTTOM[x:5,y:4,w:80,h:28],{GW|open&join_game.dcml&ASTATE=<%ASTATE>^VE_RID=<%RL_ID>},"Join")
+#btn(%BOTTOM[x:95,y:4,w:80,h:28],{GW|open&room_info_dgl.dcml&VE_RID=<%RL_ID>},"Info")
+#btn(%BOTTOM[x:185,y:4,w:80,h:28],{GW|open&new_room_dgl.dcml&ASTATE=<%ASTATE>|LW_lockall},"New")
+//<?~ IF !gg_cup || gg_cup.started ?>
+//#btn(%BOTTOM[x:643,y:4,w:106,h:28],{GW|open&tournaments.dcml&option=total|LW_lockall},"Tournaments")
+//<?~ ELSE ?>
+//#btn(%BOTTOM[x:660,y:4,w:89,h:28],{GW|open&tournaments.dcml&option=total|LW_lockall},"Tournaments")
+//<?~ END ?>
+<?~ IF !gg_cup || gg_cup.started ?>
+#font(YF,YF,YF)
+//#rtxt(%BOTTOM[x1:100%-124,x:300,y:7,h:24],{},"Cossacks Online 1.52")
+#rtxt(%BOTTOM[x1:100%-14,x:300,y:7,h:24],{},"Cossacks Online 1.52")
+<?~ ELSE ?>
+#ebox[%EBX](x:0,y:0,w:100%,h:100%)
+#font(SWF,SWF,SWF)
+#txt(%EBX[x:6,w:200,y:0-21,h:24],{},"Cossacks Online 1.52")
+#font(SYF,SYF,SYF)
+#txt(%BOTTOM[x:271,w:400,y:0,h:24],{},"Registration on")
+#font(SWF,SWF,SWF)
+#apan(%BOTTOM[x:354,y:1,w:95,h:13],{GW|url&http://127.0.0.1/cup/<? gg_cup.id | cmd ?>/&from=enter},15)
+#txt(%BOTTOM[x:357,w:400,y:0,h:24],{},"Cossacks GG Cup")
+#font(SYF,SYF,SYF)
+
+#apan(%BOTTOM[x:359,y:15,w:87,h:13],{GW|url&http://127.0.0.1/cup/<? gg_cup.id | cmd ?>/&from=enter},15)
+#txt(%BOTTOM[x:270,w:401,y:14,h:24],{},"Регистрация на")
+#font(SWF,SWF,SWF)
+#txt(%BOTTOM[x:361,w:401,y:14,h:24],{},"Казаки GG Cup")
+<?~ IF !gg_cup.wo_info ?>
+#font(SYF,SYF,SYF)
+#apan(%BOTTOM[x:<? 500 + 7 * gg_cup.players_count.length ?>,y:1,w:<? 31 + 7 * POSIX.floor(gg_cup.prize_fund).length ?>,h:13],{GW|go&gg_cup_thanks_dgl},15)
+#txt(%BOTTOM[x:444,w:400,y:0,h:24],{},", ")
+#txt(%BOTTOM[x:452,w:400,y:0,h:24],{},<? gg_cup.players_count | arg ?>)
+#txt(%BOTTOM[x:<? 457 + 7 * gg_cup.players_count.length ?>,w:400,y:0,h:24],{},"players,")
+#font(SWF,SWF,SWF)
+#txt(%BOTTOM[x:<? 502 + 7 * gg_cup.players_count.length ?>,w:400,y:0,h:24],{},<? POSIX.floor(gg_cup.prize_fund) | arg ?>)
+#txt(%BOTTOM[x:<? 507 + 7 * gg_cup.players_count.length + 7 * POSIX.floor(gg_cup.prize_fund).length ?>,w:400,y:0,h:24],{},"RUB")
+#font(SYF,SYF,SYF)
+#txt(%BOTTOM[x:<? 534 + 7 * gg_cup.players_count.length + 7 * POSIX.floor(gg_cup.prize_fund).length ?>,w:400,y:0,h:24],{},"prize fund")
+
+#font(SYF,SYF,SYF)
+#apan(%BOTTOM[x:<? 596 + 7 * gg_cup.players_count.length ?>,y:15,w:<? 10 + 7 * POSIX.floor(gg_cup.prize_fund).length ?>,h:13],{GW|go&gg_cup_thanks_dgl},15)
+#txt(%BOTTOM[x:441,w:401,y:14,h:24],{},", игроков:")
+#txt(%BOTTOM[x:500,w:401,y:14,h:24],{},<? gg_cup.players_count | arg ?>)
+#txt(%BOTTOM[x:<? 500 + 7 * gg_cup.players_count.length ?>,w:401,y:14,h:24],{},", призовой фонд:")
+#font(SWF,SWF,SWF)
+#txt(%BOTTOM[x:<? 597 + 7 * gg_cup.players_count.length ?>,w:401,y:14,h:24],{},<? POSIX.floor(gg_cup.prize_fund) _ 'р' | arg ?>)
+<?~ END ?>
+<?~ END ?>
+
+#font(YF,WF,WF)
+#box[%LBX](x:0,y:0,w:100%,h:100%-<? bottom_height ?>)
+
+#apan(%LBX[x:1,y:1,w:23,h:24],{LW_file&Internet/Cash/rooms_table_dgl.dcml},"0")
+<ROOMS>
+#DBTBL[%RMLST](%LBX[x:1,y:1,w:100%,h:100%],{ROOMS_V<? h.req.ver ?>}{%RL_C},"<? server.config.table_timeout ?>",TBL_SF,9,9,
+0,"RID",NON,NON,NON,%RL_ID,
+<? h.connection.data.dev || server.config.show_started_rooms ? 3 : 0 ?>,"",<? IF h.connection.data.dev || server.config.show_started_rooms ?>STR<? ELSE ?>NON<? END ?>,NON,NON,%RS_ST,
+<? h.connection.data.dev || server.config.show_started_rooms? 50 : 53 ?>,"Game Title",STR,STR,STR,%RL_TITLE,
+15,"Host",STR,STR,STR,%RL_HOST,
+12,"Level",STR,FIXED:Any|Hard|Normal|Easy,STR,%RL_LEVL,
+10,"Players",STR,INT:Any|>1|>2|>3|>4|>5|>6,STR,%RL_PLRS,
+0,"V",NON,NON,NON,%RL_VERS,
+10,"Ping",PING,PING:Any|<100|<200|<300|<400|<500|<600,PING,%RL_IPADR,
+0,"Sort",NON,NON,STR,%RL_SORT)
+<ROOMS>
+
+<NGDLG>
+<NGDLG>
+
+<RESIZE>
+<? IF window_size == 'large' ~?>
+#large
+<? END ?>
+<RESIZE>
+
+#save(rooms_table_dgl.dcml,ROOMS)
+
+#block(cancel.cml,CAN)<NGDLG>
+<NGDLG>
+#end(CAN)

@@ -1,0 +1,160 @@
+<? USE date ~?>
+<? USE Math ~?>
+<? USE CMLStringArgFilter ~?>
+#resize(LW_cfile&<#WinH#>&height.dat|LW_show&<\52ESIZE>
+#exec(GW\7Copen\26resize\26height=<#WinH#>\29
+<\52ESIZE>)
+
+<? IF h.connection.data.dev ?>
+#ebox[%EBX](x:+0,y:+0,w:100%,h:100%)
+#font(YF,YF,YF)
+#txt(%EBX[x:38,y:130,w:100,h:20],{},"#<? room.id ?>")
+<? END ?>
+
+#sbox[%LBX](x:0,y:0,w:100%,h:100%)
+#font(BYF,BYF,BYF)
+#txt(%LBX[x:6,y:3,w:100%,h:40],{},<? room.title | arg ?>)
+#font(YF,YF,YF)
+#apan(%LBX[x:667,y:4,w:70,h:28],{GW|go&startup},12)
+#ctxt(%LBX[x:667,y:9,w:70,h:28],{},"< games")
+
+<? offsety = 32 ?>
+#font(YF,YF,YF)
+#txt(%LBX[x:6,y:<? offsety + 9 ?>,w:100%,h:40],{},"time: <? room_time ?> [<? room.time / 25 | format("%.0f") ?>t]")
+#pan(%LBX[x:158,y:<? offsety + 10 ?>,w:1,h:15],2)
+#txt(%LBX[x:168,y:<? offsety + 9 ?>,w:100,h:40],{},"level: <? room.level == 3 ? "hard" : room.level == 2 ? "normal" : room.level == 1 ? "easy" : "for all" ?>")
+
+<? SET offsetx = 0 ~?>
+<? SET offsety = 0 ~?>
+<? SET table.width.smallcol = 36 ~?>
+
+<? SET table.top = 81 ~?>
+<? SET table.left = 6 ~?>
+<? SET table.width.nick = 138 ~?>
+<? SET table.width.nation = 78 ~?>
+<? SET table.width.score = 45 ~?>
+<? SET table.width.population = 42 ~?>
+<? SET table.width.smallcol = page == 1 ? (res ? 43 : 49) : ( page == 2 ? (res ? 57 : 66) : 51 ) ~?>
+<? SET table.width.largecol = page == 1 ? 54 : 61 ~?>
+<? SET table.row_height = 22 ~?>
+
+<? SET offsety = table.top ~?>
+#font(SYF,SYF,SYF)
+<? offsetx = table.left ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.nick - 1 + 22 * 2  ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.nick - 1 + 22 * 2  ?>],{},"player")
+<? offsetx = offsetx + table.width.nick - 1 + 21 * 2 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.nation ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.nation ?>],{},"nation")
+<? offsetx = offsetx + table.width.nation - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.score ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.score ?>],{},"score")
+<? offsetx = offsetx + table.width.score - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? table.top - 19 ?>,h:20,w:<? table.width.population ?>],0)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? table.top - 16 ?>,h:20,w:<? table.width.population ?>],{},"popul")
+<? offsetx = offsetx + table.width.population - 1 ~?>
+
+<? SET count = 0 ?>
+<?~ FOREACH player IN room.started_players ~?>
+<? offsetx = table.left ~?>
+#font(YF,YF,YF)
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:<? table.width.nick ?>,h:<? table.row_height ?>],5)
+<? IF player.exited ?>#font(RF,RF,RF)<? END ?>
+#txt(%LBX[x:<? offsetx + 3 ?>,y:<? offsety + 3 ?>,w:<? table.width.nick - 2 ?>,h:<? table.row_height ?>],{},<? player.nick | arg ?>)
+#font(YF,YF,YF)
+<? offsetx = offsetx + table.width.nick - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:22,h:<? table.row_height ?>],0)
+#pix(%LBX[x:<? offsetx + 2 ?>,y:<? offsety + 2 ?>,w:18,h:18],{},Internet/pix/squares,<? player.color ?>,<? player.color ?>,<? player.color ?>,<? player.color ?>)
+<? offsetx = offsetx + 22 - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:22,h:<? table.row_height ?>],0)
+#ctxt(%LBX[x:<? offsetx + 2 ?>,y:<? offsety + 3 ?>,w:18,h:<? table.row_height ?>],{},<? player.theam || 'x' ?>)
+<? offsetx = offsetx + 22 - 1 ~?>
+#font(SYF,SYF,SYF)
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:<? table.width.nation ?>,h:<? table.row_height ?>],5)
+#txt(%LBX[x:<? offsetx + 6 ?>,y:<? offsety + 3 ?>,w:<? table.width.nation ?>,h:<? table.row_height ?>],{},"<? nations.${player.nation} ?>")
+<? offsetx = offsetx + table.width.nation - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:<? table.width.score ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.score ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.real_scores ?><? player.stat.real_scores ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.score - 1 ~?>
+#pan(%LBX[x:<? offsetx ?>,y:<? offsety ?>,w:<? table.width.population ?>,h:<? table.row_height ?>],5)
+#ctxt(%LBX[x:<? offsetx ?>,y:<? offsety + 3 ?>,w:<? table.width.population ?>,h:<? table.row_height ?>],{},"<? IF !player.zombie || player.stat.population ?><? player.stat.population ?><? ELSE ?>-<? END ?>")
+<? offsetx = offsetx + table.width.population - 1 ~?>
+<? offsety = offsety + table.row_height - (loop.first ? 1 : 0) ~?>
+<?~ END ~?>
+
+<? INCLUDE cs/started_room_info/statcols.cml ~?>
+
+#font(SWF,SWF,SWF)
+#txt(%LBX[x:6,y:<? offsety + 1 ?>,w:100%,h:40],{},"+")
+#font(SYF,SYF,SYF)
+#txt(%LBX[x:18,y:<? offsety + 1 ?>,w:100%,h:40],{}," - speed of resource maining")
+#font(SWF,SWF,SWF)
+#txt(%LBX[x:177,y:<? offsety + 2 ?>,w:100%,h:40],{},"*")
+#font(SYF,SYF,SYF)
+#txt(%LBX[x:187,y:<? offsety + 1?>,w:100%,h:40],{}," - total resouce mained")
+#font(SWF,SWF,SWF)
+//#txt(%LBX[x:316,y:<? offsety + 1 ?>,w:100%,h:40],{},"()")
+//#font(SYF,SYF,SYF)
+//#txt(%LBX[x:326,y:<? offsety + 1 ?>,w:100%,h:40],{}," - random nation")
+//#font(SRF,SWF,SWF)
+//#rtxt(%LBX[x:422,y:<? offsety + 3 ?>,w:318,h:20],{},"unsynchronization: VoinVerta1, VoinVetra2, VoinVetra3")
+//#font(SWF,SWF,SWF)
+//#rtxt(%LBX[x:420,y:<? offsety + 1 ?>,w:318,h:20],{},"unsynchronization: VoinVerta1, VoinVetra2, VoinVetra3")
+<? # 
+#font(YF,YF,YF)
+#chk(%LBX[x:622,y:<? offsety + 2 ?>,w:20,h:20],{%WATCH}{},"watch changes",1,0,0)
+-?>
+
+<? offsetx = 613 ?>
+<? SET line_height = 18 ?>
+<? offsety = offsety + 26 ~?> <? # 22 ?>
+#font(YF,YF,YF)
+#pan(%LBX[x:4,y:<? offsety ?>,w:100%-8,h:2],2)
+<? offsety = offsety + 8 ?>
+#txt(%LBX[x:6,y:<? offsety ?>,w:100%,h:20],{},<? "Map: " _ room.map | arg ?>)
+
+//<? offsety = offsety + 20 ?>
+//<? offsety2 = offsety ~?>
+//#txt(%LBX[x:20,y:<? offsety ?>,w:100%,h:20],{},"size: x1")
+//#txt(%LBX[x:170,y:<? offsety ?>,w:100%,h:20],{},"start options: army of peasents")
+//<? offsety = offsety + line_height ?>
+//#txt(%LBX[x:20,y:<? offsety ?>,w:100%,h:20],{},"landscape: land")
+//#txt(%LBX[x:170,y:<? offsety ?>,w:100%,h:20],{},"ballon: immediate")
+//<? offsety = offsety + line_height ?>
+//#txt(%LBX[x:20,y:<? offsety ?>,w:100%,h:20],{},"resources: millions")
+//#txt(%LBX[x:170,y:<? offsety ?>,w:100%,h:20],{},"cannons: no")
+//<? offsety = offsety + line_height ?>
+//#txt(%LBX[x:20,y:<? offsety ?>,w:100%,h:20],{},"minerals: rich")
+//#txt(%LBX[x:170,y:<? offsety ?>,w:100%,h:20],{},"peace time: no")
+//<? offsety = offsety + line_height ?>
+//#txt(%LBX[x:170,y:<? offsety ?>,w:100%,h:20],{},"18th centry: immediate")
+//<? offsety = offsety + line_height ?>
+//#txt(%LBX[x:170,y:<? offsety ?>,w:100%,h:20],{},"capture: default")
+//<? offsety = offsety + line_height ?>
+//#txt(%LBX[x:170,y:<? offsety ?>,w:100%,h:20],{},"autosave: 2 min")
+//<? offsety = offsety + line_height ?>
+
+//#pix(%LBX[x:400,y:<? offsety2 - 2 ?>,w:5,h:5],{},Internet/pix/squares,1,1,1,1)
+//#txt(%LBX[x:422,y:<? offsety2 ?>,w:100%,h:20],{},"Bavaria")
+//<? offsety2 = offsety2 + line_height ?>
+//#pix(%LBX[x:400,y:<? offsety2 - 2 ?>,w:18,h:18],{},Internet/pix/squares,0,0,0,0)
+//#txt(%LBX[x:422,y:<? offsety2 ?>,w:100%,h:20],{},"Denmark")
+//<? offsety2 = offsety2 + line_height ?>
+//#pix(%LBX[x:400,y:<? offsety2 - 2 ?>,w:18,h:18],{},Internet/pix/squares,2,2,2,2)
+//#txt(%LBX[x:422,y:<? offsety2 ?>,w:100%,h:20],{},"Ukraine")
+//<? offsety2 = offsety2 + line_height ?>
+//#pix(%LBX[x:400,y:<? offsety2 - 2 ?>,w:18,h:18],{},Internet/pix/squares,3,3,3,3)
+//#txt(%LBX[x:422,y:<? offsety2 ?>,w:100%,h:20],{},"Russia")
+//<? offsety2 = offsety2 + line_height ?>
+//#pix(%LBX[x:400,y:<? offsety2 - 2 ?>,w:18,h:18],{},Internet/pix/squares,4,4,4,4)
+//#txt(%LBX[x:422,y:<? offsety2 ?>,w:100%,h:20],{},"Russia")
+//<? offsety2 = offsety2 + line_height ?>
+//#pix(%LBX[x:400,y:<? offsety2 - 2 ?>,w:18,h:18],{},Internet/pix/squares,5,5,5,5)
+//#txt(%LBX[x:422,y:<? offsety2 ?>,w:100%,h:20],{},"Russia")
+//<? offsety2 = offsety2 + line_height ?>
+//#cpix(%LBX[x:400,y:<? offsety2 - 2 ?>,w:18,h:18],{},Internet/pix/squares,6,6,6,6)
+//#txt(%LBX[x:422,y:<? offsety2 ?>,w:100%,h:20],{},"Russia")
+//<? offsety2 = offsety2 + line_height ?>
+
+<NGDLG>
+<NGDLG>

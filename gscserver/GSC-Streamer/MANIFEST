@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/GSC-Streamer.t
+lib/GSC/Streamer.pm

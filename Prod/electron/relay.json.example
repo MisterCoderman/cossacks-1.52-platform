@@ -1,0 +1,5 @@
+{
+  "relay": "ws://YOUR-SERVER:8790/cossacks",
+  "gsc":   "ws://YOUR-SERVER:8790/cossacks-gsc",
+  "ircd":  "ws://YOUR-SERVER:8790/cossacks-irc"
+}

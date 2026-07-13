@@ -1,0 +1,36 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+no warnings 'once';
+#use SimpleCossacksServer;
+use POSIX;
+use Getopt::Compact;
+
+my $go = Getopt::Compact->new(
+  name => 'simple-cossacks-server',
+  struct => [
+    [['config', 'c'], 'Config file. Default is /etc/simple-cossacks-server', '=s'],
+    [['port', 'p'], 'Override config port. Default is in config or 34001', '=i'],
+    [['log', 'l'], 'STDERR log level. 0-9 or none|fatal|alert|critical|error|warn|notice|info|debug|trace', '=s'],
+  ]
+);
+
+my %opts = %{$go->opts};
+
+my %args = (
+  config_file => $opts{config} // '/etc/simple-cossacks-server.conf'
+);
+$args{port} = $opts{port} if defined $opts{port};
+$args{log_level} = $opts{log} if defined $opts{log};
+
+require SimpleCossacksServer;
+our $server = SimpleCossacksServer->new(%args);
+
+$Coro::State::WARNHOOK = sub { $server->log->warn(shift) };
+$SIG{HUP} = sub { Coro::async(sub{$server->reload}) };
+
+$server->start->join;
+
+=head1 NAME
+
+simple-cossacks-server - simple game server for cossacks and american conquests based on GSC protocol

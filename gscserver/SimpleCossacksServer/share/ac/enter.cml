@@ -1,0 +1,33 @@
+#font(BRF,BBF,BBF)
+#ebox[%EBG](x:0,y:0,w:1024,h:768)
+#font(B1F40,B1F40,B1F40)
+#ctxt[%TI](%EBG[x:0,y:18,w:100%,h:30],{},{LCN Game Server})
+
+#ebox[%LBX](x:430,y:180,w:500,h:220)
+#pan[%MPN](%LBX[x:0,y:0,w:100%,h:100%],0)
+
+
+#font(BF,BF,BF)
+#ctxt[%TIT](%LBX[x:0,y:-1+190,w:100%,h:30],{},"Cossacks Online 1.52")
+
+#font(WF,WF,WF)
+#txt(%LBX[x:10,y:167,w:100%,h:24],{},"Your nick:")
+#font(YF,YF,WF)
+//#exec(LW_cfile&\00&Cookies/%GV_VE_NICK)
+#pan[%P_NICK](%LBX[x:100,x1:100%-10,y:165,h:24],4)
+#edit(%LBX[x:100,x1:100%-10,y:163,h:24],{%GV_LCN_NICK})
+
+#font(YF,WF,RF)
+
+#btn[%B_RGST](%LBX[x:70,y:210,w:160,h:24],{GW|open&try_enter.dcml&NICK=<%GV_LCN_NICK>|LW_lockall},"Enter")
+#btn[%B_RGST](%LBX[x:310,y:210,w:160,h:24],{LW_key&#CANCEL},"Cancel")
+
+<NGDLG>
+<NGDLG>
+
+#block(cancel.cml,CAN)<NGDLG>
+<NGDLG>
+#end(CAN)
+
+#block(l_games_btn.cml,l_g):GW|open&games_btn.dcml\00
+#end(l_g)

@@ -1,0 +1,6 @@
+//#exec(LW_cfile&Cookie\5C%GV_LCN_PROF&123\00)
+<? IF window_size == 'large' ~?>
+#large
+<? END ~?>
+#exec(LW_key&key)
+#exec(LW_gvar&%PROF&<? id ?>&%NAME&n/a&%NICK&<? nick ?>&%MAIL&n/a&%PASS&n/a&%GMID&-&%CHAT&<? server.config.chat_server ?>)

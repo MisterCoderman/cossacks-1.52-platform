@@ -1,0 +1,5 @@
+<?~ USE CMDFilter ~?>
+<NGDLG>
+#exec(LW_gvar&%CG_GAMEID&<? id | cmd ?>&%CG_MAXPL&<? max_pl | cmd ?>&%CG_GAMENAME&<? name | cmd ?>&%COMMAND&JGAME&%CG_IP&<? ip | cmd ?>&%CG_PORT&34000&%CG_HOLEHOST&<? server.config.udp_host | cmd ?>&%CG_HOLEPORT&<? server.config.udp_port | cmd ?>&%CG_HOLEINT&<? server.config.udp_interval | cmd ?>&%CG_TRANSPORT&<? server.config.udp_transport | cmd ?>\00)
+#exec(LW_file&Internet/Cash/cancel.cml\00)
+<NGDLG>

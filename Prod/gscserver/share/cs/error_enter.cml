@@ -1,0 +1,11 @@
+#ebox[%BOX](x:100,y:140,w:350,h:100)
+#pan[%MPN](%BOX[x:0,y:0,w:100%,h:100%],8)
+
+#font(WF,WF,WF)
+#ctxt[%TIT](%BOX[x:0,y:6,w:100%,h:30],{},"ERROR!")
+#font(YF,YF,YF)
+#ctxt[%L_NAME](%BOX[x:0,y:52,w:100%,h:100],{},"<? error_text ?>")
+
+#font(YF,WF,RF)
+#sbtn[%B_RGST](%BOX[x:0,y:100%+8,w:160,h:24],{GW|login&},"Try")
+#sbtn[%B_RGST](%BOX[x:185,y:100%+8,w:160,h:24],{LW_key&#CANCEL|LW_lockall},"Cancel")

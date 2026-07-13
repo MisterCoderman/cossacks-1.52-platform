@@ -1,0 +1,24 @@
+# Cossacks 1.52 multiplayer relay — drop-in service for an existing docker-compose stack.
+# The relay listens INSIDE the docker network only; expose it through your reverse proxy as
+# e.g. wss://<your-host>/cossacks  ->  cos-relay:8790   (WebSocket upgrade enabled).
+# Update = replace cos_relay.js + `docker compose restart cos-relay` (no image rebuild).
+services:
+  cos-relay:
+    image: node:22-alpine
+    container_name: cos-relay
+    restart: always
+    working_dir: /app
+    command: sh -c "npm i --no-save ws >/dev/null 2>&1 && node cos_relay.js 8790"
+    volumes:
+      - ./cos_relay.js:/app/cos_relay.js:ro
+    expose:
+      - "8790"
+    # For a quick test WITHOUT a reverse proxy, publish the port instead:
+    # ports:
+    #   - "8790:8790"
+    mem_limit: 128m
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8790/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

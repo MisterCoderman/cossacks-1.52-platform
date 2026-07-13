@@ -1,0 +1,20 @@
+{
+  "name": "cossacks-back-to-war",
+  "productName": "Cossacks: Back to War 1.52",
+  "version": "1.52.0",
+  "description": "Cossacks: Back to War 1.52 — native desktop wrapper (LAN + direct-IP multiplayer, offline)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "org.cossacks.backtowar152",
+    "files": ["main.js", "preload.js", "package.json"],
+    "extraResources": [{ "from": "../web", "to": "web", "filter": ["**/*", "!relay.json"] }]
+  }
+}

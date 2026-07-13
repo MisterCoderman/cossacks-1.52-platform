@@ -1,0 +1,6 @@
+Revision history for Perl extension GSC::Server.
+
+0.01  Thu Mar 28 20:51:58 2013
+	- original version; created by h2xs 1.23 with options
+		-X -n GSC::Server
+

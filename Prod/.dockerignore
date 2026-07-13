@@ -1,0 +1,8 @@
+# Docker build-context excludes (this file is Docker-only; it does NOT affect git — the repo keeps
+# everything). Only game/, server/, gscserver/ and docker/ are COPY'd by the Dockerfile.
+downloads/
+electron/
+make_game.sh
+build.sh
+*.zip
+*.tar.gz
