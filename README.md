@@ -465,3 +465,12 @@ C++-движок происходит из ревизии 1.42 2017 года, п
 ═══════════════════════════════════════════════════════════════════════════════════════════════════
 
 ## Screenshots · Скриншоты
+<img width="1847" height="902" alt="изображение" src="https://github.com/user-attachments/assets/4a0d3772-38fc-46f6-829d-16afe9611599" />
+<img width="1845" height="952" alt="изображение" src="https://github.com/user-attachments/assets/a9e8f935-f568-495c-abcc-33a23a86eac8" />
+<img width="1630" height="1289" alt="изображение" src="https://github.com/user-attachments/assets/a6a5e8c8-b01f-4397-9479-3464be8b27f5" />
+
+
+
+
+
+
