@@ -215,7 +215,7 @@ The C++ engine descends from the 2017 revamp of 1.42, carried forward as 1.52:
 | 1.42 revamp | ereb-thanatos | 2017 | [cossacks-revamp-2017](https://github.com/ereb-thanatos/cossacks-revamp-2017) |
 | 1.52 | MR.CODERMAN | June 11, 2025 | [cossacks-1.52](https://github.com/MisterCoderman/cossacks-1.52) |
 | 1.52 "The Last Stand" | Ildar (JIEgOKOJI) | Mar 14, 2026 | [cossacks-1.52](https://github.com/JIEgOKOJI/cossacks-1.52) |
-| 1.52 platform | this project | July 14, 2026 | WebAssembly + multiplayer + desktop |
+| 1.52 platform | MR.CODERMAN | July 14, 2026 | WebAssembly + multiplayer + desktop |
 
 ## Acknowledgements
 
@@ -448,7 +448,7 @@ C++-движок происходит из ревизии 1.42 2017 года, п
 | Ревамп 1.42 | ereb-thanatos | 2017 | [cossacks-revamp-2017](https://github.com/ereb-thanatos/cossacks-revamp-2017) |
 | 1.52 | MR.CODERMAN | 11 июня 2025 года | [cossacks-1.52](https://github.com/MisterCoderman/cossacks-1.52) |
 | 1.52 «The Last Stand» | Ильдар (JIEgOKOJI) | 14 марта 2026 года | [cossacks-1.52](https://github.com/JIEgOKOJI/cossacks-1.52) |
-| 1.52 платформа | этот проект | 14 июля 2026 года | WebAssembly + мультиплеер + десктоп |
+| 1.52 платформа | MR.CODERMAN | 14 июля 2026 года | WebAssembly + мультиплеер + десктоп |
 
 ## Благодарности
 
