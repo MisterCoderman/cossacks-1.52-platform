@@ -230,6 +230,7 @@ The C++ engine descends from the 2017 revamp of 1.42, carried forward as 1.52:
 
 <hr>
 <a name="rus"></a>
+
 # Cossacks: Back to War 1.52 — веб-издание
 
 Стратегия реального времени 2002 года в браузере через WebAssembly, с нативными десктоп-клиентами для
