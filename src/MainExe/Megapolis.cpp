@@ -2193,6 +2193,30 @@ byte DefPreBDef[6] = { TowerID,5,6 };
 byte* PreBDef = DefPreBDef;
 int NPreBDef = 1;
 
+extern byte AINatCountry[8];
+// FIX (usermission/campaign Bavarian-buildings): remap a proposed building index to the AI nation's
+// OWN country variant (same Usage) when the shared AI economy build-list resolved to a foreign
+// nation's building (e.g. Poland's AI proposing Bavaria's Europ/Dom/Sklad because the base [PRODUCE]
+// list is inherited). No-op for non-AI nations, same-country buildings, or when the nation has no
+// building of its own with that Usage. Runtime-confirmed via [ARCH-BUILD]: Nat=1(Poland,country 9)
+// was building 'Europ(BA)'/'Dom_Prussia(BA)'/'Sclad1(BA)' (NatID=0) instead of its own.
+static word RemapBuildingToNation(Nation* Nat, word idx)
+{
+	byte country = AINatCountry[Nat->NNUM];
+	if (country == 0xFF) return idx;
+	GeneralObject* g = Nat->Mon[idx];
+	if (!g || !g->newMons || g->NatID == country) return idx;
+	byte usage = g->newMons->Usage;
+	int N = Nat->NMon;
+	for (int j = 0; j < N; j++)
+	{
+		GeneralObject* gj = Nat->Mon[j];
+		if (gj && gj->NatID == country && gj->newMons && gj->newMons->Usage == usage)
+			return (word)j;
+	}
+	return idx;
+}
+
 //Process production queues, upgrades, farm growing etc
 void City::ProcessCreation()
 {
@@ -2316,6 +2340,7 @@ void City::ProcessCreation()
 			}
 			else
 			{
+				PRP->NIndex = RemapBuildingToNation(Nat, PRP->NIndex); // FIX Bavarian-buildings
 				GeneralObject* IGO = Nat->Mon[PRP->NIndex];
 				NewMonster* INM = IGO->newMons;
 				if (!INM->Building)

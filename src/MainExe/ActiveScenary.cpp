@@ -56,6 +56,12 @@ extern int CurrentAnswer;
 byte AssignTBL[8] = { 0,1,2,3,4,5,6,7 };
 void AIER( char* Mess );
 bool AiIsRunNow = false;
+// FIX (usermission/campaign Bavarian-buildings): the country (NatID, per NATIONS.LST load order)
+// that each nation SLOT actually plays. Derived from the slot's own units in LoadAIFromDLL. Used by
+// the building-creation remap in Megapolis.cpp so an AI nation builds ITS OWN architecture instead of
+// the base nation's (Bavaria) when the shared AI economy build-list resolves to a foreign index.
+// 0xFF = unknown / not an AI nation (no remap).
+byte AINatCountry[8] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 ScenaryInterface SCENINF;
 
@@ -436,6 +442,23 @@ void ScenaryInterface::Load(char* Name, char* Text)
 		strcpy(lang, "en");
 	}
 #endif
+
+	// FIX (usermission double-modal): usermissions run SCENINF.Load TWICE — the menu preview at
+	// Interface.cpp:13421 and the launch at :7046 (the /MISSION direct-launch path used by ?mission=
+	// runs it only once, which is why headless never reproduced this). The #PAGE parser below APPENDS
+	// to NPages WITHOUT resetting it, so the second Load duplicated every page — ShowPage then matched
+	// each id twice (NP=2) and popped TWO identical modal windows. Free any pages a prior Load left and
+	// restart the page table, so it holds each #PAGE exactly once no matter how many times Load runs.
+	if (MaxPages && PageID)
+	{
+		for (int i = 0; i < NPages; i++)
+		{
+			delete[] Page[i];    Page[i]    = nullptr;
+			delete[] PageID[i];  PageID[i]  = nullptr;
+			delete[] PageBMP[i]; PageBMP[i] = nullptr;
+		}
+	}
+	NPages = 0;
 
 	char FileToLoad[260];
 	ResFile RF = INVALID_HANDLE_VALUE;
@@ -4179,6 +4202,16 @@ extern "C" __declspec( dllexport ) void StartAI( byte Nat, char* Name, int Land,
 	{
 		NATIONS[i].NMask = MSKS[i];
 	}
+	// FIX (usermission/campaign passive-AI): the temp-mask block above rebuilds the enemy-info graph
+	// (GNFO/EINF) under a fake "player=nation0 vs team 0x7E" hostility, which CLOBBERS the mission's
+	// real alliance masks. Because GlobalEnemyInfo::Setup is one-shot, that fake graph then persists,
+	// so the enemy AI targets nobody and stands passive at its base — until a Save/Load rebuilds EINF
+	// from the real restored masks (LoadSave.cpp:3201-3202) and it instantly activates. Rebuild the
+	// graph here from the now-restored REAL masks, exactly as the load path does, so a fresh mission
+	// start matches a load. Runtime-confirmed: [EINF-SETUP] showed real masks (1,2,4,8,32,64) at map
+	// load but 0x7E for every enemy after StartAI.
+	GNFO.Clear();
+	GNFO.Setup();
 	StartAIEx( Nat, Name, Land, Money, ResOnMap, Difficulty );
 }
 void StartAIEx( byte Nat, char* Name, int Land, int Money, int ResOnMap, int Difficulty )
@@ -6015,6 +6048,27 @@ void LoadAIFromDLL( byte Nat, char* Name )
 	CNAT = NATIONS + Nat;
 	CCIT = CNAT->CITY;
 	CurAINation = Nat;
+	// Derive the country this slot plays from its own pre-placed units (their prototype carries the
+	// country NatID), for the Bavarian-building remap in Megapolis. Prefer a peasant/center (never
+	// captured at mission start), fall back to any unit of the nation.
+	if ( Nat < 8 )
+	{
+		AINatCountry[Nat] = 0xFF;
+		for ( int pass = 0; pass < 2 && AINatCountry[Nat] == 0xFF; pass++ )
+			for ( int i = 0; i < MAXOBJECT; i++ )
+			{
+				OneObject* OB = Group[i];
+				if ( OB && OB->NNUM == Nat && OB->newMons && OB->Ref.General )
+				{
+					byte u = OB->newMons->Usage;
+					if ( pass == 1 || u == PeasantID || u == CenterID )
+					{
+						AINatCountry[Nat] = OB->Ref.General->NatID;
+						break;
+					}
+				}
+			}
+	}
 	// Pure WASM: AI plugins are statically recompiled; LoadLibrary -> cos_LoadLibraryA -> cos_pe_load.
 	NT->hLibAI = LoadLibrary( Name );
 	AiIsRunNow = false;
