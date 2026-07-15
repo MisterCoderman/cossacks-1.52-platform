@@ -25,7 +25,8 @@ on any host with Docker to run the game and the online stack together.
 | | Link |
 |---|---|
 | Windows | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Windows.zip) |
-| macOS | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
+| macOS Intel| [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
+| macOS Apple Silicon| [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS-arm64.zip) |
 | Linux | [`<<< download link >>> `](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Linux.tar.gz) |
 | Web archive (single-player) | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Web-SinglePlayer.zip) |
 | Docker image (server + web) | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/cossacks152-image.tar.gz) |
@@ -256,7 +257,8 @@ Docker, чтобы игра и онлайн-стек работали вмест
 | | Ссылка |
 |---|---|
 | Windows | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Windows.zip) |
-| macOS | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
+| macOS Intel| [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
+| macOS Apple Silicon| [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS-arm64.zip) |
 | Linux | [`<<< ссылка >>> `](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Linux.tar.gz) |
 | Веб-архив (одиночная) | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Web-SinglePlayer.zip) |
 | Docker-образ (сервер + веб) | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/cossacks152-image.tar.gz) |
