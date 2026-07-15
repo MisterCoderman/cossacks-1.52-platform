@@ -4,7 +4,7 @@ The 2002 real-time-strategy game running in the browser via WebAssembly, with na
 for Windows, macOS and Linux and a self-contained online-multiplayer server. It preserves the full
 stability of classic 1.52 — battles of up to 40,000 units — and adds single-player cheat codes.
 
-*Русская версия ниже.*
+*[Информация на русском языке](#rus)*
 
 ---
 
@@ -24,11 +24,11 @@ on any host with Docker to run the game and the online stack together.
 
 | | Link |
 |---|---|
-| Windows | `<<< download link >>>` |
-| macOS | `<<< download link >>>` |
-| Linux | `<<< download link >>>` |
-| Web archive (single-player) | `<<< download link >>>` |
-| Docker image (server + web) | `<<< download link >>>` |
+| Windows | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Windows.zip) |
+| macOS | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
+| Linux | [`<<< download link >>> `](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Linux.tar.gz) |
+| Web archive (single-player) | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Web-SinglePlayer.zip) |
+| Docker image (server + web) | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/cossacks152-image.tar.gz) |
 
 Source code, build recipes and server code are in this repository.
 
@@ -131,7 +131,7 @@ HOST=<public-ipv4> ./Prod/nodocker/start.sh
 
 **Important:** This repository contains **only the build code for the engine**. It is provided solely for reference.
 
-If you want to build **exactly the same version** as the original (with the full set of game assets), you need to download a separate version of the repository/archive from this link, which includes all game resources.
+If you want to build **exactly the same version** as the original (with the full set of game assets), you need to download a separate version of the repository/archive from this [link](https://archive.org/download/cossacks-back-to-war-v-1.52/src-cossacks-1.52-platform.zip), which includes all game resources.
 
 The repository is self-contained: a clean checkout builds the web game, Docker image, and desktop clients without files from the original game and without hardcoded paths (scripts self-detect via `emenv.sh`).
 
@@ -213,9 +213,9 @@ The C++ engine descends from the 2017 revamp of 1.42, carried forward as 1.52:
 | Stage | Author | Year | Repository |
 |---|---|---|---|
 | 1.42 revamp | ereb-thanatos | 2017 | [cossacks-revamp-2017](https://github.com/ereb-thanatos/cossacks-revamp-2017) |
-| 1.52 | MR.CODERMAN | 2025 | [cossacks-1.52](https://github.com/MisterCoderman/cossacks-1.52) |
-| 1.52 "The Last Stand" | Ildar (JIEgOKOJI) | — | [cossacks-1.52](https://github.com/JIEgOKOJI/cossacks-1.52) |
-| 1.52 platform | this project | — | WebAssembly + multiplayer + desktop |
+| 1.52 | MR.CODERMAN | June 11, 2025 | [cossacks-1.52](https://github.com/MisterCoderman/cossacks-1.52) |
+| 1.52 "The Last Stand" | Ildar (JIEgOKOJI) | Mar 14, 2026 | [cossacks-1.52](https://github.com/JIEgOKOJI/cossacks-1.52) |
+| 1.52 platform | MR.CODERMAN | July 14, 2026 | WebAssembly + multiplayer + desktop |
 
 ## Acknowledgements
 
@@ -228,7 +228,8 @@ The C++ engine descends from the 2017 revamp of 1.42, carried forward as 1.52:
 
 <br><br>
 
-═══════════════════════════════════════════════════════════════════════════════════════════════════
+<hr>
+<a name="rus"></a>
 
 # Cossacks: Back to War 1.52 — веб-издание
 
@@ -254,11 +255,11 @@ Docker, чтобы игра и онлайн-стек работали вмест
 
 | | Ссылка |
 |---|---|
-| Windows | `<<< ссылка >>>` |
-| macOS | `<<< ссылка >>>` |
-| Linux | `<<< ссылка >>>` |
-| Веб-архив (одиночная) | `<<< ссылка >>>` |
-| Docker-образ (сервер + веб) | `<<< ссылка >>>` |
+| Windows | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Windows.zip) |
+| macOS | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
+| Linux | [`<<< ссылка >>> `](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Linux.tar.gz) |
+| Веб-архив (одиночная) | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Web-SinglePlayer.zip) |
+| Docker-образ (сервер + веб) | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/cossacks152-image.tar.gz) |
 
 Исходный код, рецепты сборки и код серверов — в этом репозитории.
 
@@ -360,7 +361,7 @@ HOST=<публичный-ipv4> ./Prod/nodocker/start.sh
 # Сборка из исходников
 
 **Важно:** В этом репозитории находится **только код для сборки движка**. Он предоставлен исключительно для ознакомления.  
-Если вы хотите собрать **точно такую же версию**, как оригинальная (с полным набором игровых ресурсов), вам нужно загрузить отдельную версию репозитория/архива по этой ссылке, которая включает все игровые ресурсы.
+Если вы хотите собрать **точно такую же версию**, как оригинальная (с полным набором игровых ресурсов), вам нужно загрузить отдельную версию репозитория/архива по этой [ссылке](https://archive.org/download/cossacks-back-to-war-v-1.52/src-cossacks-1.52-platform.zip), которая включает все игровые ресурсы.
 
 Репозиторий самодостаточен: чистый checkout собирает веб-игру, Docker-образ и десктоп-клиенты без
 файлов из оригинальной игры и без хардкод-путей (скрипты самоопределяются через `emenv.sh`).
@@ -446,9 +447,9 @@ C++-движок происходит из ревизии 1.42 2017 года, п
 | Этап | Автор | Год | Репозиторий |
 |---|---|---|---|
 | Ревамп 1.42 | ereb-thanatos | 2017 | [cossacks-revamp-2017](https://github.com/ereb-thanatos/cossacks-revamp-2017) |
-| 1.52 | MR.CODERMAN | 2025 | [cossacks-1.52](https://github.com/MisterCoderman/cossacks-1.52) |
-| 1.52 «The Last Stand» | Ильдар (JIEgOKOJI) | — | [cossacks-1.52](https://github.com/JIEgOKOJI/cossacks-1.52) |
-| 1.52 платформа | этот проект | — | WebAssembly + мультиплеер + десктоп |
+| 1.52 | MR.CODERMAN | 11 июня 2025 года | [cossacks-1.52](https://github.com/MisterCoderman/cossacks-1.52) |
+| 1.52 «The Last Stand» | Ильдар (JIEgOKOJI) | 14 марта 2026 года | [cossacks-1.52](https://github.com/JIEgOKOJI/cossacks-1.52) |
+| 1.52 платформа | MR.CODERMAN | 14 июля 2026 года | WebAssembly + мультиплеер + десктоп |
 
 ## Благодарности
 
@@ -462,6 +463,18 @@ C++-движок происходит из ревизии 1.42 2017 года, п
 
 <br><br>
 
-═══════════════════════════════════════════════════════════════════════════════════════════════════
+<hr>
 
 ## Screenshots · Скриншоты
+<img width="1279" height="797" alt="изображение" src="https://github.com/user-attachments/assets/5b967e7d-edb4-44dd-85e7-90eea64edcd4" />
+<img width="1279" height="795" alt="изображение" src="https://github.com/user-attachments/assets/095d3f16-87b2-4aaf-a5d7-5c0ede8e780c" />
+<img width="1275" height="800" alt="изображение" src="https://github.com/user-attachments/assets/360c70d6-180a-4c0a-a582-c583dc374fde" />
+<img width="1847" height="902" alt="изображение" src="https://github.com/user-attachments/assets/4a0d3772-38fc-46f6-829d-16afe9611599" />
+<img width="1845" height="952" alt="изображение" src="https://github.com/user-attachments/assets/a9e8f935-f568-495c-abcc-33a23a86eac8" />
+<img width="1630" height="1289" alt="изображение" src="https://github.com/user-attachments/assets/a6a5e8c8-b01f-4397-9479-3464be8b27f5" />
+
+
+
+
+
+
