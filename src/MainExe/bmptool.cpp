@@ -163,6 +163,20 @@ int TotalSize = 0;
 
 __declspec(dllexport) void _ExFree(void* ptr) {
 	if (!ptr) return;
+	DWORD* Ptr = (DWORD*)ptr;
+	//reference-build "FIX MEMORY" armor: 1.52 is known to issue bogus/double frees that the
+	//original exe absorbed; without this dlmalloc metadata corrupts and traps much later
+	if ((uintptr_t)Ptr < 0x1000) {
+		static int nrep = 0;
+		if (nrep < 20) { nrep++; printf("[MEM] _ExFree: bogus pointer %p ignored\n", ptr); }
+		return;
+	}
+	if (Ptr[0] == 0xDEADBEEF) {
+		static int nrep = 0;
+		if (nrep < 20) { nrep++; printf("[MEM] _ExFree: double free of %p absorbed\n", ptr); }
+		return;
+	}
+	Ptr[0] = 0xDEADBEEF;
 	free(ptr);
 	if (TotalSize > 0) TotalSize--;
 }

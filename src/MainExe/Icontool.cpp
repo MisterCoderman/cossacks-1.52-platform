@@ -24,7 +24,7 @@ extern int AddIconLy;
 extern byte GraySet[256];
 void CBar( int x, int y, int Lx, int Ly, byte c );
 extern byte KeyCodes[512][2];
-#define NKEYS 61
+#define NKEYS 68
 extern char* KeyNames[NKEYS];
 extern byte ScanKeys[NKEYS];
 void OneIcon::InitIcon()
@@ -82,16 +82,19 @@ void OneIcon::CreateHint( char* str )
 		free( HintLo );
 		HintLo = NULL;
 	};
-	if (( !EditMapMode ) && SpriteID != -1 && KeyCodes[SpriteID][0])
+	if (( !EditMapMode ) && SpriteID != -1 && SpriteID < 512 && KeyCodes[SpriteID][0])
 	{
-		strcat( Hint, " (" );
 		byte Code = KeyCodes[SpriteID][0];
 		byte State = KeyCodes[SpriteID][1];
-		if (State & 1)strcat( Hint + strlen( Hint ), "CTRL+" );
-		if (State & 2)strcat( Hint + strlen( Hint ), "ALT+" );
-		if (State & 4)strcat( Hint + strlen( Hint ), "SHIFT+" );
-		strcat( Hint + strlen( Hint ), KeyNames[Code] );
-		strcat( Hint, ")" );
+		if (Code < NKEYS)
+		{
+			strcat( Hint, " (" );
+			if (State & 1)strcat( Hint + strlen( Hint ), "CTRL+" );
+			if (State & 2)strcat( Hint + strlen( Hint ), "ALT+" );
+			if (State & 4)strcat( Hint + strlen( Hint ), "SHIFT+" );
+			strcat( Hint + strlen( Hint ), KeyNames[Code] );
+			strcat( Hint, ")" );
+		}
 	};
 };
 void OneIcon::CreateHintLo( char* str )
@@ -360,6 +363,12 @@ OneIcon* IconSet::AddIcon( word FileID, word SpriteID )
 				memcpy( Ico, Icons, NIcons * sizeof(OneIcon) );
 				free( Icons );
 			}
+			for (int i = NIcons; i < NIcons + 8; i++)
+			{
+				Ico[i].Visible = false;
+				Ico[i].Hint = NULL;
+				Ico[i].HintLo = NULL;
+			}
 			Space = NIcons + 8;
 			Icons = Ico;
 		}
@@ -378,6 +387,24 @@ OneIcon* IconSet::AddIconFixed( word FileID, word SpriteID, int Index )
 	if (Index == -1)
 	{
 		return AddIcon( FileID, SpriteID );
+	}
+
+	if (Index >= Space)
+	{
+		OneIcon* Ico = new OneIcon[Index + 8];
+		if (Space > 0)
+		{
+			memcpy( Ico, Icons, NIcons * sizeof(OneIcon) );
+			free( Icons );
+		}
+		for (int i = NIcons; i < Index + 8; i++)
+		{
+			Ico[i].Visible = false;
+			Ico[i].Hint = NULL;
+			Ico[i].HintLo = NULL;
+		}
+		Space = Index + 8;
+		Icons = Ico;
 	}
 
 	OneIcon* OI = Icons + Index;
@@ -438,7 +465,8 @@ void IconSet::DrawIconSet( int x, int y, int Nx, int Ny, int NyStart )
 			{
 				AssignMovePro( p, OI->MoveOver, OI->MoveParam );
 			};
-			if (DOKEYS&&p != -1 && OI->SpriteID != -1 && KeyCodes[OI->SpriteID][0])
+			if (DOKEYS&&p != -1 && OI->SpriteID != -1 && OI->SpriteID < 512
+				&& KeyCodes[OI->SpriteID][0] && KeyCodes[OI->SpriteID][0] < NKEYS)
 			{
 				AssignKeys( p, ScanKeys[KeyCodes[OI->SpriteID][0]], KeyCodes[OI->SpriteID][1] );
 			};

@@ -56,6 +56,32 @@ function exeDir() {
 }
 function externalRelayPath() { return path.join(exeDir(), 'relay.json'); }
 
+// Windowed-mode size/position persistence — ALL desktop platforms (win/linux/mac): players who run
+// non-fullscreen can stretch the window to any custom shape (odd resolutions, half-monitor, etc.)
+// and get the SAME window back on next launch. State lives in window.json next to the exe (same
+// convention as relay.json); if that folder is not writable, it silently falls back to Electron's
+// per-user data dir.
+const WINDOW_STATE_FILE = 'window.json';
+function windowStatePaths() {
+  return [path.join(exeDir(), WINDOW_STATE_FILE), path.join(app.getPath('userData'), WINDOW_STATE_FILE)];
+}
+function loadWindowState() {
+  for (const p of windowStatePaths()) {
+    try {
+      const st = JSON.parse(fs.readFileSync(p, 'utf8'));
+      if (st && Number.isFinite(st.width) && Number.isFinite(st.height)
+          && st.width >= 320 && st.height >= 240) return st;
+    } catch (e) {}
+  }
+  return null;
+}
+function saveWindowState(st) {
+  const data = JSON.stringify(st);
+  for (const p of windowStatePaths()) {
+    try { fs.writeFileSync(p, data); return; } catch (e) {}
+  }
+}
+
 function startServer() {
   return new Promise((resolve) => {
     const srv = http.createServer((req, res) => {
@@ -111,8 +137,19 @@ if (!app.requestSingleInstanceLock()) {
       lan.attach(srv);
       lan.start();
     } catch (e) { try { console.error('[lanlink]', e && e.message); } catch (_) {} }
+    const st = loadWindowState();
+    // Restore the saved position only if it still lands on a connected display (monitors change).
+    let pos = {};
+    if (st && Number.isFinite(st.x) && Number.isFinite(st.y)) {
+      const { screen } = require('electron');
+      const onScreen = screen.getAllDisplays().some((d) => {
+        const a = d.workArea;
+        return st.x < a.x + a.width && st.x + st.width > a.x && st.y < a.y + a.height && st.y + st.height > a.y;
+      });
+      if (onScreen) pos = { x: st.x, y: st.y };
+    }
     win = new BrowserWindow({
-      width: 1280, height: 800,
+      width: st ? st.width : 1280, height: st ? st.height : 800, ...pos,
       autoHideMenuBar: true,
       backgroundColor: '#000000',
       icon: path.join(__dirname, 'icon.png'),
@@ -176,6 +213,25 @@ if (!app.requestSingleInstanceLock()) {
       } else if (cmd === 'windowed') { try { win.setFullScreen(false); } catch (e) {} }
       else if (cmd === 'close') { try { win.close(); } catch (e) {} }
     });
+
+    // Persist the WINDOWED rectangle so a custom-stretched window comes back identical next launch.
+    // getNormalBounds() reports the windowed rect even while fullscreen/maximized, so a fullscreen
+    // session never overwrites the player's custom windowed size. Fullscreen/maximized state itself
+    // is deliberately NOT restored: in this shell Maximize MEANS fullscreen, and restoring it would
+    // surprise-launch the game fullscreen.
+    const captureWinState = () => {
+      if (!win) return null;
+      const b = win.getNormalBounds();
+      return { x: b.x, y: b.y, width: b.width, height: b.height };
+    };
+    let winSaveTimer = null;
+    const persistWinStateSoon = () => {
+      if (winSaveTimer) clearTimeout(winSaveTimer);
+      winSaveTimer = setTimeout(() => { try { const s = captureWinState(); if (s) saveWindowState(s); } catch (e) {} }, 500);
+    };
+    win.on('resize', persistWinStateSoon);
+    win.on('move', persistWinStateSoon);
+    win.on('close', () => { try { const s = captureWinState(); if (s) saveWindowState(s); } catch (e) {} });
 
     win.on('closed', () => { win = null; app.quit(); });
   });

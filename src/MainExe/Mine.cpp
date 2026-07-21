@@ -543,8 +543,8 @@ bool CreateInsideList( IconSet* IS, byte NI )
 		return false;
 	}
 
-	word Nmons[1024];
-	memset( Nmons, 0, 2048 );
+	word Nmons[2048];//covers the full Nation::Mon[2048] NIndex domain (all-nations load exceeds 1024)
+	memset( Nmons, 0, sizeof(Nmons) );
 
 	int Nsel = ImNSL[MyNation];
 	word* SMon = ImSelm[NI];
@@ -855,9 +855,10 @@ bool CreateInsideList( IconSet* IS, byte NI )
 				if (WCR)
 				{
 					OneIcon* OI = IS->AddIcon( 0, WCR->UpgradeGateIcon );
-					char* Text = GetTextByID( "CreateGates." );
+					char* Text = GetTextByID( "CreateGates" );
 					char ccc[128];
 					strcpy( ccc, Text );
+					if (ccc[0] && ccc[strlen( ccc ) - 1] != ' ')strcat( ccc, " " );
 					for (int k = 0; k < 8; k++)
 					{
 						if (WCR->GateCost[k])
@@ -895,10 +896,18 @@ bool CreateInsideList( IconSet* IS, byte NI )
 					if (InMID != 0xFFFF)
 					{
 						OneObject* INO = Group[InMID];
-						if (INO)
+						if (INO && INO->NIndex < 2048)
 						{
 							Nmons[INO->NIndex]++;
-							//assert(INO->NIndex<1024);
+							if (INO->NIndex >= 1024)
+							{
+								static bool warned = false;
+								if (!warned)
+								{
+									warned = true;
+									printf( "[MINE] inside unit NIndex=%d >=1024 (pre-fix OOB site)\n", (int) INO->NIndex );
+								}
+							}
 						};
 					};
 				};
@@ -908,8 +917,7 @@ bool CreateInsideList( IconSet* IS, byte NI )
 					if (OR1->DoLink == &LeaveMineLink || OR1->DoLink == &LeaveTransportLink)
 					{
 						word IID = OR1->info.BuildObj.ObjIndex;
-						//assert(IID<1024);
-						if (Nmons[IID])Nmons[IID]--;
+						if (IID < 2048 && Nmons[IID])Nmons[IID]--;
 					};
 					OR1 = OR1->NextOrder;
 				};
@@ -918,11 +926,12 @@ bool CreateInsideList( IconSet* IS, byte NI )
 	};
 	Nation* NT = &NATIONS[NI];
 	bool Pres = 0;
-	for (int i = 0; i < 1024; i++)
+	for (int i = 0; i < 2048; i++)
 	{
 		if (Nmons[i])
 		{
 			GeneralObject* GO = NT->Mon[i];
+			if (!GO || !GO->newMons)continue;
 			NewMonster* NM = GO->newMons;
 			OneIcon* OI = IS->AddIcon( NM->IconFileID, NM->IconID, 0, NM->Message );
 			OI->AssignIntVal( Nmons[i] );

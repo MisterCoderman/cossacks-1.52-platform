@@ -149,6 +149,7 @@ void LoadSounds(char* fn) {
 __declspec(dllexport)
 void PlayEffect(int n, int pan, int vol) {
 	if (!SoundOK)return;
+	if (n < 0)return;//unset sound ids stay -1 (e.g. NoMineSound) and pass the word-promoted n<NSounds
 	vol -= (100 - WarSound) * 40;
 	if (n < NSounds) {
 		if (SnDanger[n])FieldDelay = 400;
@@ -185,6 +186,7 @@ void PlayEffect(int n, int pan, int vol) {
 };
 void PlayCoorEffect(int n, int x, int y, int pan, int vol) {
 	if (!SoundOK)return;
+	if (n < 0)return;
 	vol -= (100 - WarSound) * 40;
 	if (n < NSounds) {
 		if (SnDanger[n])FieldDelay = 400;
@@ -221,6 +223,7 @@ void PlayCoorEffect(int n, int x, int y, int pan, int vol) {
 };
 void PlaySingleEffect(int n, int pan, int vol) {
 	if (!SoundOK)return;
+	if (n < 0)return;
 	vol -= (100 - WarSound) * 40;
 	if (n < NSounds) {
 		if (SnDanger[n])FieldDelay = 400;

@@ -204,7 +204,11 @@ extern "C" void cos_viewport_changed(void){
     if (!(InGame || InEditor)) return;                  // MENU: never touched (stays 1024x768)
     int tw, th; cos_tab_px(&tw, &th);
     if (tw < 320 || th < 240) return;
-    SDL_SetWindowSize(gWindow, tw, th);                 // canvas backing == tab pixel box
+    SDL_SetWindowSize(gWindow, tw, th);                 // web stub: only records the size
+    cos_webgl_backing(tw, th);                          // the REAL backing resize — without it the
+                                                        // nw==RealLx path below keeps a stale
+                                                        // (menu-letterbox) backing after F11-in-menu
+                                                        // and the mission renders stretched
     int nw, nh;
     if (cos_browser_fullscreen()) { nw = exRealLx > 0 ? exRealLx : tw; nh = exRealLy > 0 ? exRealLy : th; }
     else { nw = tw; nh = th; }                          // windowed: fill the tab (1:1 mouse), live

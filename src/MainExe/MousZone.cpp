@@ -117,10 +117,10 @@ int CreateRZone(
 			Z->Hint = new char[strlen(Hint) + 1];
 			strcpy(Z->Hint, Hint);
 		}
-		if (HintLo) 
+		if (HintLo)
 		{
 			Z->HintLo = new char[strlen(HintLo) + 1];
-			strcpy(Z->Hint, Hint);
+			strcpy(Z->HintLo, HintLo);
 		}
 		return i;
 	}
@@ -256,7 +256,7 @@ int CheckZonePressed(int i) {
 	else return false;
 };
 extern byte KeyCodes[512][2];
-#define NKEYS 61
+#define NKEYS 68
 extern byte ScanKeys[NKEYS];
 bool CheckSpritePressed(int sp) {
 	if (sp < 0 || sp >= 512 || EnterChatMode || EditMapMode)return false;
