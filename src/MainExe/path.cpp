@@ -12,6 +12,16 @@
 #include "Path.h"
 #include "TopoGraf.h"
 
+
+#define PATH_LOG_ENABLED 0
+static inline FILE* _plog_fopen(void) {
+#if PATH_LOG_ENABLED
+	return fopen("dmcr_path.log", "a");
+#else
+	return NULL;
+#endif
+}
+
 bool AllowPathDelay;
 
 MotionBrush::MotionBrush()
@@ -763,12 +773,21 @@ bool OneObject::CreatePrePath(int x1, int y1)
 	AllowPathDelay = true;
 	if (abs(x - x1) < 2 && abs(y - y1) < 2)return false;
 	MotionField* MFI = &MFIELDS[LockType];
+	{
+		FILE* plog = _plog_fopen();
+		if (plog) { fprintf(plog, "[PATH] enter x=%d y=%d -> x1=%d y1=%d Lx=%d LockType=%d GLock=%d\n", x, y, x1, y1, Lx, LockType, GLock); fclose(plog); }
+	}
 	if (GLock)MFI->BClrBar(x, y, Lx);
 	bool InLocked = MFI->CheckBar(x, y, Lx, Lx);
-	if (InLocked && PathX) {
-		if (GLock)MFI->BSetBar(x, y, Lx);
-		return false;
-	};
+	// FIX (units permanently stuck against an obstacle): this used to bail out immediately
+	// whenever InLocked && PathX (i.e. standing in a blocked cell while already tracking a
+	// path) instead of attempting the InLocked recovery block below (walk along the direct
+	// line to the first clear cell). NewMon.cpp's blocked-this-tick retry
+	// (OB->CreatePrePath(OB->PathX[OB->NIPoints-1], ...)) ALWAYS has PathX set when it calls
+	// this - so a unit that ends up snug against a building took this early exit on every
+	// single retry, forever, and never got a chance to nudge itself free. The InLocked block
+	// further down already frees the old PathX/PathY correctly before reallocating, so it is
+	// safe to just let this case fall through to it instead of bailing out here.
 	int sdx = x1 - x;
 	int	sdy = y1 - y;
 	int	Cum = 0;
@@ -983,35 +1002,48 @@ bool OneObject::CreatePrePath(int x1, int y1)
 
 	Pps--;
 
+	bool escapeFromLocked = false;
 	if (InLocked)
 	{
 		int uu;
 		for (uu = 0; uu < Pps && MFI->CheckBar(pxx[uu], pyy[uu], Lx, Lx); uu++);
-		if (uu >= Pps) return false;
-
-		// Освобождаем старую память, если она была выделена
-		if (PathX) {
-			free(PathX);
-			PathX = nullptr;
+		if (uu >= Pps) {
+			// FIX (units stuck flush against an obstacle with no clear cell on the direct line to
+			// the target): used to give up here unconditionally. Don't - fall through into the
+			// same wall-hugging routing below that already handles "hit an obstacle partway along
+			// the line", just seeded as if the obstacle starts right at our own position (index 0)
+			// instead of being found by walking into it. That setup code already special-cases
+			// Rpp==0 correctly (the `if (Rpp > 0) Rpp -= 1;` guard just below never decrements
+			// past it), so no other change is needed for it to trace a way around from here.
+			FILE* plog = _plog_fopen();
+			if (plog) { fprintf(plog, "[PATH] InLocked no direct-line escape, trying wall-trace x=%d y=%d Pps=%d\n", x, y, Pps); fclose(plog); }
+			escapeFromLocked = true;
 		}
-		if (PathY) {
-			free(PathY);
-			PathY = nullptr;
-		}
+		else {
+			// Освобождаем старую память, если она была выделена
+			if (PathX) {
+				free(PathX);
+				PathX = nullptr;
+			}
+			if (PathY) {
+				free(PathY);
+				PathY = nullptr;
+			}
 
-		// Выделяем новую память
-		PathX = new short[1];
-		PathY = new short[1];
-		PathX[0] = pxx[uu];
-		PathY[0] = pyy[uu];
-		NIPoints = 1;
-		return true;
+			// Выделяем новую память
+			PathX = new short[1];
+			PathY = new short[1];
+			PathX[0] = pxx[uu];
+			PathY[0] = pyy[uu];
+			NIPoints = 1;
+			return true;
+		}
 	}
 
 	int RVisPos = 0;
 	int LVisPos = 0;
 	bool RightPrefer = true;
-	int Rtx;//current point 
+	int Rtx;//current point
 	int Rty;
 	int Ltx;
 	int Lty;
@@ -1031,17 +1063,23 @@ bool OneObject::CreatePrePath(int x1, int y1)
 	int Lcum = 0;
 	int Lcum1 = 0;
 	bool Rvis, Lvis;
-	//Проверяем прямую проходимость
 	int uu;
-	for (uu = 1; uu < Pps && !MFI->CheckBar(pxx[uu], pyy[uu], Lx, Lx); uu++);
-	if (uu == Pps)return false;
-	//Идем, пока не упремся в стенку
-	for (uu = 1; uu < Pps && !MFI->CheckBar(pxx[uu] - 1, pyy[uu] - 1, Lx + 2, Lx + 2); uu++);
-	Rpp = uu;
+	if (escapeFromLocked) {
+		// Already standing against the obstacle (checked above) - the wall starts at our own
+		// position (index 0 of the line), so there is nothing to search for.
+		Rpp = 0;
+	} else {
+		//Проверяем прямую проходимость
+		for (uu = 1; uu < Pps && !MFI->CheckBar(pxx[uu], pyy[uu], Lx, Lx); uu++);
+		if (uu == Pps)return false;
+		//Идем, пока не упремся в стенку
+		for (uu = 1; uu < Pps && !MFI->CheckBar(pxx[uu] - 1, pyy[uu] - 1, Lx + 2, Lx + 2); uu++);
+		Rpp = uu;
+	}
 	Rtx = pxx[Rpp];
 	Rty = pyy[Rpp];
-	int Rppm = uu;
-	int Lppm = uu;
+	int Rppm = Rpp;
+	int Lppm = Rpp;
 	// Если dx>dy,то на каждом шагу dx изменяетя строго на 1
 	if (Rtx != x1 || Rty != y1) {
 		//LLock[y][x]=false;
@@ -1288,11 +1326,19 @@ bool OneObject::CreatePrePath(int x1, int y1)
 			};
 			NeedPath = true;
 			if (GLock)MFI->BSetBar(x, y, Lx);
+			{
+				FILE* plog = _plog_fopen();
+				if (plog) { fprintf(plog, "[PATH] exit routed-around x=%d y=%d NIPoints=%d RightPrefer=%d\n", x, y, NIPoints, (int)RightPrefer); fclose(plog); }
+			}
 			return true;
 		}
 		else {
 			if (GLock)MFI->BSetBar(x, y, Lx);
 			PathDelay = 200 + (rando() & 15);
+			{
+				FILE* plog = _plog_fopen();
+				if (plog) { fprintf(plog, "[PATH] exit GAVE-UP x=%d y=%d x1=%d y1=%d Rpp=%d MaxP=%d\n", x, y, x1, y1, Rpp, MaxP); fclose(plog); }
+			}
 			return false;
 		};
 	};

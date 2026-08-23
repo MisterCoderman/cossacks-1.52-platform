@@ -14,9 +14,14 @@
 
 const { contextBridge, ipcRenderer } = require('electron');
 
+
+let cosFsState = false;
+ipcRenderer.on('cos-fs', (ev, v) => { cosFsState = !!v; });
+
 contextBridge.exposeInMainWorld('cosElectron', {
   // The engine's Exit menu -> window.cosOnExit() -> window.cosElectron.quit() (main.js handles it).
-  quit() { ipcRenderer.send('cos-quit'); }
+  quit() { ipcRenderer.send('cos-quit'); },
+  isFullscreen() { return cosFsState; }
 });
 
 // ---------------------------------------------------------------------------------------------

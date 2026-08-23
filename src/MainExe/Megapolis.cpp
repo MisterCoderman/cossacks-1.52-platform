@@ -2208,12 +2208,18 @@ static word RemapBuildingToNation(Nation* Nat, word idx)
 	if (!g || !g->newMons || g->NatID == country) return idx;
 	byte usage = g->newMons->Usage;
 	int N = Nat->NMon;
+	bool foundOwnVariant = false;
 	for (int j = 0; j < N; j++)
 	{
 		GeneralObject* gj = Nat->Mon[j];
 		if (gj && gj->NatID == country && gj->newMons && gj->newMons->Usage == usage)
-			return (word)j;
+		{
+			foundOwnVariant = true;
+			if (gj->Enabled) return (word)j;
+		}
 	}
+
+	if (foundOwnVariant) return 0xFFFF;
 	return idx;
 }
 
@@ -2341,6 +2347,7 @@ void City::ProcessCreation()
 			else
 			{
 				PRP->NIndex = RemapBuildingToNation(Nat, PRP->NIndex); // FIX Bavarian-buildings
+				if (PRP->NIndex == 0xFFFF) continue; // mission-forbidden for this nation's own building variant
 				GeneralObject* IGO = Nat->Mon[PRP->NIndex];
 				NewMonster* INM = IGO->newMons;
 				if (!INM->Building)

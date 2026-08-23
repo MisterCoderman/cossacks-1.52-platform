@@ -110,6 +110,7 @@ extern "C" int cos_webgl_init(void) {
     // A long-backgrounded tab can have its GPU context evicted by the browser ("webglcontextlost").
     // Without preventDefault() the context is never restored -> permanent black screen while the
     // game keeps ticking. Flag lost/restored; cos_webgl_present() rebuilds the pipeline on restore.
+
     EM_ASM({
         if (!Module.__wrHooked) {
             Module.__wrHooked = 1;
@@ -122,6 +123,12 @@ extern "C" int cos_webgl_init(void) {
             c.addEventListener('webglcontextrestored', function () {
                 Module.__wrRestored = 1;
                 console.warn('[webgl] context restored — rebuilding pipeline');
+            }, false);
+            document.addEventListener('visibilitychange', function () {
+                if (!document.hidden) {
+                    Module.__wrLost = 1;
+                    console.warn('[webgl] tab visible again — forcing context check/rebuild');
+                }
             }, false);
         }
     });

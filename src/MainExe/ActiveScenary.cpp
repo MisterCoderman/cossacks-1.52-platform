@@ -88,12 +88,26 @@ void HandleMission()
 		SCENINF.CTextTime -= 8 << SpeedSh;
 		if ( SCENINF.CTextTime < 0 )SCENINF.CTextTime = 0;
 	}
+
+	extern word NPlayers;
+	int missionTimerDec = 8 << SpeedSh;
+	if ( NPlayers < 2 )
+	{
+		extern unsigned long GetRealTime();
+		static unsigned long lastMissionTimerReal = 0;
+		unsigned long nowReal = GetRealTime();
+		if ( lastMissionTimerReal == 0 )lastMissionTimerReal = nowReal;
+		unsigned long dtReal = nowReal - lastMissionTimerReal;
+		if ( dtReal > 1000 )dtReal = 1000; // clamp pauses/mission-transition gaps, don't burn timers on resume
+		lastMissionTimerReal = nowReal;
+		missionTimerDec = (int)( ( dtReal * (unsigned long)( 8 << SpeedSh ) ) / 640 );
+	}
 	GTimer* GTM = SCENINF.TIME;
 	for ( int i = 0; i < 32; i++ )
 	{
 		if ( GTM->Time )
 		{
-			GTM->Time -= 8 << SpeedSh;
+			GTM->Time -= missionTimerDec;
 			if ( GTM->Time <= 0 )
 			{
 				GTM->Time = 0;
@@ -443,12 +457,7 @@ void ScenaryInterface::Load(char* Name, char* Text)
 	}
 #endif
 
-	// FIX (usermission double-modal): usermissions run SCENINF.Load TWICE — the menu preview at
-	// Interface.cpp:13421 and the launch at :7046 (the /MISSION direct-launch path used by ?mission=
-	// runs it only once, which is why headless never reproduced this). The #PAGE parser below APPENDS
-	// to NPages WITHOUT resetting it, so the second Load duplicated every page — ShowPage then matched
-	// each id twice (NP=2) and popped TWO identical modal windows. Free any pages a prior Load left and
-	// restart the page table, so it holds each #PAGE exactly once no matter how many times Load runs.
+
 	if (MaxPages && PageID)
 	{
 		for (int i = 0; i < NPages; i++)
@@ -548,8 +557,8 @@ void ScenaryInterface::Load(char* Name, char* Text)
 	{
 #ifndef _MSC_VER
 		char startDatPath[] = "UserMissions/start.dat";
-		mkdir("UserMissions", 0777);   // MEMFS starts empty: the dir must exist before fopen("w") below,
-		                                // and before CMS_start.dll's own CreateFileA reads it back.
+		mkdir("UserMissions", 0777);   
+		                                
 #else
 		char startDatPath[] = "UserMissions\\start.dat";
 #endif

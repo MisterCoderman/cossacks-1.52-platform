@@ -2175,7 +2175,43 @@ void DisturbWater(short* Wave)
 
 void CorrectLeftWaves();
 
+
+#define WATER_LOG_ENABLED 0
+static inline FILE* _wtrlog_fopen(void) {
+#if WATER_LOG_ENABLED
+    return fopen("dmcr_water.log", "a");
+#else
+    return NULL;
+#endif
+}
+static void LogWaveStats(int frame) {
+    FILE* wlog = _wtrlog_fopen();
+    if (!wlog) return;
+
+    short mn0 = Wave0[0], mx0 = Wave0[0];
+    short mn1 = Wave1[0], mx1 = Wave1[0];
+    short mn2 = Wave2[0], mx2 = Wave2[0];
+    for (int i = 0; i < WaveSize; i += 8) {
+        if (Wave0[i] < mn0) mn0 = Wave0[i]; if (Wave0[i] > mx0) mx0 = Wave0[i];
+        if (Wave1[i] < mn1) mn1 = Wave1[i]; if (Wave1[i] > mx1) mx1 = Wave1[i];
+        if (Wave2[i] < mn2) mn2 = Wave2[i]; if (Wave2[i] > mx2) mx2 = Wave2[i];
+    }
+    fprintf(wlog, "[WATER] t=%d Wave0[%d,%d] Wave1[%d,%d] Wave2[%d,%d] WaterLevel=%d smaplx=%d smaply=%d\n",
+        frame, mn0, mx0, mn1, mx1, mn2, mx2, (int)WaterLevel, smaplx, smaply);
+    fclose(wlog);
+}
+
 void HandleWater() {
+    {
+
+        extern unsigned long GetRealTime();
+        static unsigned long lastLog = 0;
+        unsigned long nowReal = GetRealTime();
+        if (nowReal - lastLog >= 3000) {
+            lastLog = nowReal;
+            LogWaveStats((int)nowReal);
+        }
+    }
 	int WLX = smaplx + 2;
 	int WLY = smaply + 2;
 	int han = tmtmt & 1;

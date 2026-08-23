@@ -3445,7 +3445,11 @@ void ClearArrays()
 	memset( BLDList, 0, VAL_MAXCIOFS * 2 );
 	memset( NPresence, 0, VAL_MAXCIOFS );
 	memset( NSpri, 0, VAL_SPRSIZE );
-	memset( SpRefs, 0, VAL_SPRSIZE * sizeof(int*) );
+
+	for (int i = 0; i < VAL_SPRSIZE; i++)
+	{
+		if (SpRefs[i]) { free(SpRefs[i]); SpRefs[i] = nullptr; }
+	}
 	memset( WaterDeep, 0, ( VAL_MAPSX*VAL_MAPSX ) >> 2 );
 	memset( WaterBright, 0, ( VAL_MAPSX*VAL_MAPSX ) >> 2 );
 
@@ -3455,6 +3459,10 @@ void ClearArrays()
 	}
 
 	memset( UnitsField.MapV, 0, MAPSY*BMSX );
+	for (int i = 0; i < B3SZ; i++)
+	{
+		if (Obj3Map[i]) { free(Obj3Map[i]); Obj3Map[i] = nullptr; }
+	}
 	memset( NObj3, 0, B3SZ * 2 );
 	memset( InfoMap, 0, VAL_SPRNX*VAL_SPRNX );
 	memset( CantBuild, 0, VAL_SPRNX*VAL_SPRNX );

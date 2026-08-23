@@ -190,7 +190,12 @@ extern "C" void cos_webgl_present(const unsigned char* idx, int w, int h, int pi
 int cos_native_w = 0, cos_native_h = 0;                           // monitor's true pixel resolution
 extern "C" void cos_webinput_attach(void);                        // WebInput.cpp: re-own canvas events
 extern "C" int cos_browser_fullscreen(void){
-    return EM_ASM_INT({ return (document.fullscreenElement||document.webkitFullscreenElement)?1:0; });
+
+    return EM_ASM_INT({
+        if (document.fullscreenElement || document.webkitFullscreenElement) return 1;
+        if (window.cosElectron && window.cosElectron.isFullscreen && window.cosElectron.isFullscreen()) return 1;
+        return 0;
+    });
 }
 void cos_tab_px(int* w, int* h){
     *w = EM_ASM_INT({ return (Module.canvas && Module.canvas.clientWidth ) ? (Module.canvas.clientWidth  *(window.devicePixelRatio||1))|0 : 0; });
