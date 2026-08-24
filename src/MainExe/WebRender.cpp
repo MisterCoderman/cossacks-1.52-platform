@@ -26,6 +26,9 @@ static int    wr_tw = 0, wr_th = 0;            // allocated size of the index te
 static int    wr_bw = 0, wr_bh = 0;            // current canvas backing size
 static unsigned char wr_pal_copy[1024];        // last palette (re-uploaded after context restore)
 static int    wr_pal_valid = 0;
+static int    wr_lost_seen = 0;                
+static int    wr_lost_streak = 0;             
+static int    wr_resize_grace = 0;             
 
 static const char* WR_VS =
     "#version 300 es\n"
@@ -57,18 +60,8 @@ static GLuint wr_compile(GLenum type, const char* src) {
     return s;
 }
 
-extern "C" int cos_webgl_init(void) {
-    if (wr_ctx) return 1;
-    EmscriptenWebGLContextAttributes a;
-    emscripten_webgl_init_context_attributes(&a);
-    a.majorVersion = 2; a.minorVersion = 0;
-    a.alpha = false; a.depth = false; a.stencil = false; a.antialias = false;
-    a.premultipliedAlpha = true; a.preserveDrawingBuffer = false;
-    a.powerPreference = EM_WEBGL_POWER_PREFERENCE_HIGH_PERFORMANCE;
-    wr_ctx = emscripten_webgl_create_context("#canvas", &a);
-    if (wr_ctx <= 0) { printf("[webgl] context create FAILED (%d)\n", (int)wr_ctx); wr_ctx = 0; return 0; }
-    emscripten_webgl_make_context_current(wr_ctx);
 
+static int cos_webgl_build_resources(void) {
     GLuint vs = wr_compile(GL_VERTEX_SHADER, WR_VS);
     GLuint fs = wr_compile(GL_FRAGMENT_SHADER, WR_FS);
     wr_prog = glCreateProgram();
@@ -107,9 +100,28 @@ extern "C" int cos_webgl_init(void) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);   // 8-bit rows, arbitrary widths
     glDisable(GL_DEPTH_TEST); glDisable(GL_BLEND);
 
-    // A long-backgrounded tab can have its GPU context evicted by the browser ("webglcontextlost").
-    // Without preventDefault() the context is never restored -> permanent black screen while the
-    // game keeps ticking. Flag lost/restored; cos_webgl_present() rebuilds the pipeline on restore.
+    return 1;
+}
+
+extern "C" int cos_webgl_init(void) {
+    if (wr_ctx) return 1;                      
+    {
+        static double lastAttempt = -1e18;
+        double now = emscripten_get_now();               
+        if (now - lastAttempt < 500.0) return 0;
+        lastAttempt = now;
+    }
+    EmscriptenWebGLContextAttributes a;
+    emscripten_webgl_init_context_attributes(&a);
+    a.majorVersion = 2; a.minorVersion = 0;
+    a.alpha = false; a.depth = false; a.stencil = false; a.antialias = false;
+    a.premultipliedAlpha = true; a.preserveDrawingBuffer = false;
+    a.powerPreference = EM_WEBGL_POWER_PREFERENCE_HIGH_PERFORMANCE;
+    wr_ctx = emscripten_webgl_create_context("#canvas", &a);
+    if (wr_ctx <= 0) { printf("[webgl] context create FAILED (%d)\n", (int)wr_ctx); wr_ctx = 0; return 0; }
+    emscripten_webgl_make_context_current(wr_ctx);
+    if (!cos_webgl_build_resources()) return 0;
+
 
     EM_ASM({
         if (!Module.__wrHooked) {
@@ -124,12 +136,7 @@ extern "C" int cos_webgl_init(void) {
                 Module.__wrRestored = 1;
                 console.warn('[webgl] context restored — rebuilding pipeline');
             }, false);
-            document.addEventListener('visibilitychange', function () {
-                if (!document.hidden) {
-                    Module.__wrLost = 1;
-                    console.warn('[webgl] tab visible again — forcing context check/rebuild');
-                }
-            }, false);
+
         }
     });
     printf("[webgl] context+pipeline ready\n");
@@ -139,6 +146,10 @@ extern "C" int cos_webgl_init(void) {
 // Size the canvas BACKING STORE (replaces SDL_SetWindowSize). CSS size stays under shell control.
 extern "C" void cos_webgl_backing(int w, int h) {
     if (w < 1 || h < 1) return;
+    if (w != wr_bw || h != wr_bh) {
+
+        wr_resize_grace = 10;
+    }
     wr_bw = w; wr_bh = h;
     EM_ASM({ var c=Module.canvas; if (c && (c.width!=$0 || c.height!=$1)){ c.width=$0; c.height=$1; } }, w, h);
 }
@@ -147,8 +158,10 @@ extern "C" void cos_webgl_backing(int w, int h) {
 extern "C" void cos_webgl_palette(const unsigned char* rgba256) {
     memcpy(wr_pal_copy, rgba256, 1024);      // keep a copy for context-restore re-upload
     wr_pal_valid = 1;
-    if (!wr_ctx) return;
+    if (!wr_ctx || wr_lost_seen || !wr_tex_pal) return;
+    if (emscripten_is_webgl_context_lost(wr_ctx)) return;
     emscripten_webgl_make_context_current(wr_ctx);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, wr_tex_pal);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1, GL_RGBA, GL_UNSIGNED_BYTE, rgba256);
@@ -158,28 +171,35 @@ extern "C" void cos_webgl_palette(const unsigned char* rgba256) {
 extern "C" void cos_webgl_present(const unsigned char* idx, int w, int h, int pitch) {
     if (!idx || w < 1 || h < 1) return;
 
-    // Robust context-loss recovery. A long-backgrounded tab gets its GPU context evicted; the
-    // browser does NOT reliably fire 'webglcontextrestored', so waiting for that event leaves a
-    // permanent black screen. Instead we detect loss LIVE (emscripten_is_webgl_context_lost, plus
-    // the JS lost flag as a hint) and actively rebuild every frame: destroy the dead context and
-    // create a fresh one. If the browser hasn't released the GPU yet, creation fails and we simply
-    // retry on the next frame - so the picture always comes back the instant the GPU is available.
-    int lost = (!wr_ctx)
-             || EM_ASM_INT({ return Module.__wrLost ? 1 : 0; })
-             || emscripten_is_webgl_context_lost(wr_ctx);
-    if (lost) {
+    if (!wr_ctx) return;
+    int inResizeGrace = wr_resize_grace > 0;
+    if (wr_resize_grace > 0) wr_resize_grace--;
+    if (emscripten_is_webgl_context_lost(wr_ctx)) {
+        if (inResizeGrace) return;
+        int wrLostEvent = EM_ASM_INT({ return Module.__wrLost ? 1 : 0; });
+        wr_lost_streak++;
+        if (!(wrLostEvent || wr_lost_streak >= 3)) return;
+        if (!wr_lost_seen) { wr_lost_seen = 1; printf("[webgl] context lost - waiting for restore\n"); }
+        wr_prog = 0; wr_vao = 0; wr_tex_idx = 0; wr_tex_pal = 0; wr_tw = wr_th = 0;
+        return;
+    }
+    wr_lost_streak = 0;
+    if (wr_lost_seen) {
         EM_ASM({ Module.__wrLost = 0; Module.__wrRestored = 0; });
-        if (wr_ctx) emscripten_webgl_destroy_context(wr_ctx);
-        wr_ctx = 0; wr_prog = 0; wr_vao = 0; wr_tex_idx = 0; wr_tex_pal = 0;
-        wr_tw = wr_th = 0;
-        if (!cos_webgl_init()) return;   // GPU not back yet -> retry next frame (wr_ctx stays 0)
+        emscripten_webgl_make_context_current(wr_ctx);
+        while (glGetError() != GL_NO_ERROR) {}       
+        int ok = cos_webgl_build_resources()
+               && glGetError() == GL_NO_ERROR
+               && !emscripten_is_webgl_context_lost(wr_ctx);
+        if (!ok) { wr_prog = 0; wr_vao = 0; wr_tex_idx = 0; wr_tex_pal = 0; wr_tw = wr_th = 0; return; }
+        wr_lost_seen = 0;
         if (wr_pal_valid) {
-            emscripten_webgl_make_context_current(wr_ctx);
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, wr_tex_pal);
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 1, GL_RGBA, GL_UNSIGNED_BYTE, wr_pal_copy);
         }
-        printf("[webgl] pipeline rebuilt after context loss\n");
+        { extern void cos_webinput_rebind(void); cos_webinput_rebind(); }
+        printf("[webgl] resources rebuilt after context restore\n");
     }
     emscripten_webgl_make_context_current(wr_ctx);
 
@@ -206,6 +226,12 @@ extern "C" void cos_webgl_present(const unsigned char* idx, int w, int h, int pi
     glUseProgram(wr_prog);
     glBindVertexArray(wr_vao);
     glDrawArrays(GL_TRIANGLES, 0, 3);
+
+
+    if (glGetError() != GL_NO_ERROR) {
+        wr_prog = 0; wr_vao = 0; wr_tex_idx = 0; wr_tex_pal = 0; wr_tw = wr_th = 0;
+        wr_lost_seen = 1;
+    }
 }
 
 #endif // __EMSCRIPTEN__

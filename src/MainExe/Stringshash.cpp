@@ -32,9 +32,21 @@ StrHash::StrHash(){
 	memset(SHI,0,sizeof(SHI));
 	LastIndex=0;
 };
+
+static inline bool sh_bucket_sane(const StrHashItem* b){
+	if(b->NStr<0||b->MaxStr<0||b->NStr>b->MaxStr)return false;
+	if(b->MaxStr>65536)return false;                       // AddString grows by 16; this is absurd
+	if(b->NStr>0&&(!b->Str||!b->Value))return false;
+	return true;
+}
 void StrHash::Clear(){
 	for(int i=0;i<256;i++){
 		StrHashItem* lpSHI=SHI+i;
+		if(!sh_bucket_sane(lpSHI)){
+
+			memset(lpSHI,0,sizeof(*lpSHI));
+			continue;
+		}
 		for(int j=0;j<lpSHI->NStr;j++)free(lpSHI->Str[j]);
 		if(lpSHI->Str){
 			free(lpSHI->Str);

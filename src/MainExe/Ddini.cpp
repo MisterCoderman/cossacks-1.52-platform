@@ -187,8 +187,9 @@ extern "C" int  cos_webgl_init(void);                             // WebRender.c
 extern "C" void cos_webgl_backing(int w, int h);
 extern "C" void cos_webgl_palette(const unsigned char* rgba256);
 extern "C" void cos_webgl_present(const unsigned char* idx, int w, int h, int pitch);
-int cos_native_w = 0, cos_native_h = 0;                           // monitor's true pixel resolution
-extern "C" void cos_webinput_attach(void);                        // WebInput.cpp: re-own canvas events
+int cos_native_w = 0, cos_native_h = 0;                           
+extern "C" void cos_webinput_attach(void);                        
+extern "C" void cos_frame_yield(void);                            
 extern "C" int cos_browser_fullscreen(void){
 
     return EM_ASM_INT({
@@ -267,10 +268,12 @@ __declspec(dllexport) void FlipPages(void) {
     // returns before yielding (the old sleep was only at the very end, past `if(!bActive)return`),
     // the loop busy-spins and never hands control back -> a minimized/blurred tab freezes and does
     // not resume. One unconditional yield keeps the render+tick loop cooperative in every state.
-    emscripten_sleep(0);
+
+    cos_frame_yield();
     // Poll for a tab resize / fullscreen toggle and re-apply the viewport (backing = tab box; game
     // resolution = tab when windowed, chosen mode when fullscreen). Cheap per-frame check; the heavy
     // surface re-create only runs on an actual change.
+
     { static int lw=0, lh=0, lfs=-1, lig=-1;
       int tw, th; cos_tab_px(&tw,&th); int fs=cos_browser_fullscreen(); int ig=(InGame||InEditor)?1:0;
       if (ig != lig) {
@@ -282,7 +285,7 @@ __declspec(dllexport) void FlipPages(void) {
                                                       // (no CreateDDObjects runs on exit — the marker
                                                       // window is valid — so reset it here or the menu
                                                       // letterboxes twice and looks squashed)
-      } else if (ig && tw>=320 && th>=240 && (tw!=lw || th!=lh || fs!=lfs)) {
+      } else if (ig && tw>=320 && th>=240 && (abs(tw-lw)>2 || abs(th-lh)>2 || fs!=lfs)) {
           lw=tw; lh=th; lfs=fs; cos_viewport_changed();                          // in-game: live tab-resize
       }
       // Feed the native HTML5 input layer (WebInput.cpp): it pointer-locks on the next in-canvas

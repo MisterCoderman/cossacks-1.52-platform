@@ -315,6 +315,7 @@ bool ProcessMessages();
 int GetMapSUMM(char* Name);
 int GetAbsoluteRealTime();
 void StartPing(DWORD dpid, int ID);
+void EndPing(DWORD dpid);
 void ComeInGame(bool SINGLE);
 
 // ========== Helper functions ==========
@@ -436,7 +437,7 @@ public:
 	void Clear();
 	void DeleteBadPlayers();
 	void Add(DWORD DPID, int ID);
-	void Remove(int ID);
+	void Remove(DWORD dpid);
 	void Process();
 };
 
@@ -504,15 +505,16 @@ void LoosedPack::Add(DWORD dpid, int ID)
 	}
 }
 
-void LoosedPack::Remove(int ID)
+
+void LoosedPack::Remove(DWORD dpid)
 {
-	// Mark received
 	for (int i = 0; i < 16; i++)
 	{
-		if (OLID[i].DPID)
+		if (OLID[i].DPID == dpid)
 		{
 			OLID[i].NReceived++;
 			OLID[i].LastReceiveTime = GetTickCount();
+			return;
 		}
 	}
 }
@@ -1267,6 +1269,7 @@ STAGENEXT:
 		else if (lp[0] == 'ANSW' && lp[0] + lp[1] + lp[2] + lp[3] + lp[4] == lp[5])
 		{
 			PSUMM.AddPing(lp[4], lp[2], lp[3], GetAbsoluteRealTime());
+			EndPing(lp[4]);
 		}
 		else if (lp[0] == 'ALIV')
 		{
@@ -1969,7 +1972,46 @@ bool StartIGame(bool SINGLE)
 
 void ProcessNetCash() { NCASH.Process(); }
 void ProcessNewInternet() { IPCORE.QueueProcess(); IPCORE.PollLanAdvertise(); }
-void CreateDiffStr(char*) {}
+int GetPing(DWORD pid);           
+char* GetLString(DWORD dpid);    
+
+void CreateDiffStr(char* str) {
+    if ((GetKeyState(VK_CONTROL) & 0x8000) && (GetKeyState(VK_SHIFT) & 0x8000)) {
+        str[0] = 0;
+        for (int i = 0; i < NPlayers; i++) {
+            strcat(str, PINFO[i].name);
+            strcat(str, " : ");
+            int dt = PSUMM.GetTimeDifference(PINFO[i].PlayerID);
+            sprintf(str + strlen(str), "%4X %d", PINFO[i].PlayerID, dt);
+            strcat(str, " ");
+        }
+    } else {
+        str[0] = 0;
+        int N = 0;
+        char* LOSS_PN = GetTextByID("LOSS_PN");
+        for (int i = 0; i < NPlayers; i++) {
+            strcat(str, PINFO[i].name);
+            if (PINFO[i].Rank) {
+                char cc3[128];
+                sprintf(cc3, "RS_RANK_%d", PINFO[i].Rank);
+                sprintf(str + strlen(str), " (%s)", GetTextByID(cc3));
+            }
+            if (PINFO[i].PlayerID != MyDPID) {
+                strcat(str, " : ");
+                int dt = GetPing(PINFO[i].PlayerID);
+                sprintf(str + strlen(str), "%d", dt);
+                strcat(str, " ,");
+                sprintf(str + strlen(str), LOSS_PN, GetLString(PINFO[i].PlayerID));
+            }
+            strcat(str, " ");
+            N++;
+            if (N > 3) {
+                strcat(str, "\\");
+                N = 0;
+            }
+        }
+    }
+}
 void LoadSaveFile() {}
 void SyncroDoctor() {}
 bool CheckPingsReady() {
@@ -2080,9 +2122,9 @@ void StartPing(DWORD dpid, int ID)
 	LPACK.Process();
 }
 
-void EndPing(int ID)
+void EndPing(DWORD dpid)
 {
-	LPACK.Remove(ID);
+	LPACK.Remove(dpid);
 }
 
 char _tmp_lstr[12];

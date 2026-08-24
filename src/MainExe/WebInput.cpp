@@ -198,6 +198,23 @@ extern "C" void cos_webinput_attach(void) {
     emscripten_set_focus_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr, false, wi_on_focus);
     emscripten_set_blur_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr, false, wi_on_focus);
 }
+
+
+extern "C" void cos_webinput_rebind(void) {
+    emscripten_set_mousemove_callback("#canvas", nullptr, false, nullptr);
+    emscripten_set_mousedown_callback("#canvas", nullptr, false, nullptr);
+    emscripten_set_wheel_callback("#canvas", nullptr, false, nullptr);
+    emscripten_set_mouseup_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, false, nullptr);
+    emscripten_set_pointerlockchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, false, nullptr);
+
+    emscripten_set_mousemove_callback("#canvas", nullptr, false, wi_on_move);
+    emscripten_set_mousedown_callback("#canvas", nullptr, false, wi_on_down);
+    emscripten_set_wheel_callback("#canvas", nullptr, false, wi_on_wheel);
+    emscripten_set_mouseup_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, false, wi_on_up);
+    emscripten_set_pointerlockchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, false, wi_on_lockchange);
+
+    wi_locked = 0;
+}
 extern "C" void cos_webinput_init(void) {
     static int done = 0;
     if (done) return; done = 1;

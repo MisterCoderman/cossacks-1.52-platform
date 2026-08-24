@@ -742,6 +742,9 @@ void NewMap(int szX, int szY)//Standard map size is 480x480
 	memset(Group, 0, sizeof(Group));
 	memset(NLocks, 0, sizeof(NLocks));
 
+
+	{ extern void ResetWaveField(); ResetWaveField(); }
+
 	ClearMaps();
 
 	BuildMode = false;

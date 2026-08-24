@@ -1479,8 +1479,9 @@ void UnitLight(OneObject* OB)
 	}
 }
 
-//New fog of war
-word WFSC[128 * 128];
+
+#define WFSC_STRIDE 384
+word WFSC[WFSC_STRIDE * WFSC_STRIDE];
 int maxWFX;
 int maxWFY;
 
@@ -1491,15 +1492,15 @@ void SetWF(int x, int y, word w)
 		return;
 	}
 
-	WFSC[x + (y * 128)] = w;
+	WFSC[x + (y * WFSC_STRIDE)] = w;
 }
 
 int maxFX, maxFY;
 
 void CreateFogImage()
 {
-	maxWFX = smaplx;
-	maxWFY = smaply;
+	maxWFX = (smaplx < WFSC_STRIDE - 2) ? smaplx : WFSC_STRIDE - 2;
+	maxWFY = (smaply < WFSC_STRIDE - 2) ? smaply : WFSC_STRIDE - 2;
 	maxFX = (msx / 4) + kFogOffset;
 	maxFY = (msy / 4) + kFogOffset;
 
@@ -1593,20 +1594,23 @@ void CreateFogImage()
 
 void DrawFog()
 {
-	for (int y = 0; y < smaply; y++)
+
+	int fogNX = (smaplx < WFSC_STRIDE - 1) ? smaplx : WFSC_STRIDE - 1;
+	int fogNY = (smaply < WFSC_STRIDE - 1) ? smaply : WFSC_STRIDE - 1;
+	for (int y = 0; y < fogNY; y++)
 	{
-		for (int x = 0; x < smaplx; x++)
+		for (int x = 0; x < fogNX; x++)
 		{
 			int xx = (x * 32) + smapx;
 			int yy = (y * 16) + smapy;
-			int sof = x + (y * 128);
+			int sof = x + (y * WFSC_STRIDE);
 
 			ShowSuperFluentFog32_160_16(
 				xx, yy,
 				GetF(WFSC[sof]),
 				GetF(WFSC[sof + 1]),
-				GetF(WFSC[sof + 128]),
-				GetF(WFSC[sof + 129])
+				GetF(WFSC[sof + WFSC_STRIDE]),
+				GetF(WFSC[sof + WFSC_STRIDE + 1])
 			);
 		}
 	}

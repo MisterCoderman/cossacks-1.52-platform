@@ -250,7 +250,8 @@ void SetPoint(short* Wave, int x, int y, int r, int h) {
 	int r0 = r;
 	int r1 = r0 * 2;
 	double rrr = r0 * r0 / 3;
-	if (x <= r0 || y <= r0 || x >= WaveLx - r0 || y >= WaveLy - r0)return;
+	const int guard = (r0 > 5) ? r0 : 5;
+	if (x <= guard || y <= guard || x >= WaveLx - guard || y >= WaveLy - guard)return;
 	int pos = x + y * WaveLx;
 	for (int i = 0; i < r1; i++)
 		for (int j = 0; j < r1; j++) {
@@ -536,6 +537,18 @@ void ProcessCost()
 void ClearWater()
 {
 	memset(WaterDeep, 0, WMPSIZE);
+}
+
+
+void ResetWaveField()
+{
+	memset(Wave0, WaterLevel, sizeof(Wave0));
+	memset(Wave1, WaterLevel, sizeof(Wave1));
+	memset(Wave2, WaterLevel, sizeof(Wave2));
+	OldMapx = 0;
+	OldMapy = 0;
+	GenerateSurface(2, 2, WaveLx - 4, WaveLy - 4);
+	CurStage = 0;
 }
 
 void CreateMiniMap();
@@ -2066,7 +2079,7 @@ void FastProcess1_0(short* Wave0, short* Wave1, short* Wave2)
 			int neighbors = (int)Wave1[pos + 1] + (int)Wave1[pos - 1] +
 			                (int)Wave1[pos - WaveLx] + (int)Wave1[pos + WaveLx];
 			int center2 = (int)Wave1[pos] << 1;
-			short result = (short)(((short)(neighbors - center2 - center2) >> 4) + center2 - Wave0[pos]);
+			short result = (short)(((short)(neighbors - center2 - center2) / 16) + center2 - Wave0[pos]);
 			Wave2[pos] = result;
 			pos++;
 		}
@@ -2119,7 +2132,7 @@ void FastProcess1_1(short* Wave0, short* Wave1, short* Wave2)
 			int neighbors = (int)Wave1[pos + 1] + (int)Wave1[pos - 1] +
 			                (int)Wave1[pos - WaveLx] + (int)Wave1[pos + WaveLx];
 			int center2 = (int)Wave1[pos] << 1;
-			short result = (short)(((short)(neighbors - center2 - center2) >> 4) + center2 - Wave0[pos]);
+			short result = (short)(((short)(neighbors - center2 - center2) / 16) + center2 - Wave0[pos]);
 			Wave2[pos] = result;
 			pos++;
 		}
@@ -2326,7 +2339,8 @@ void SpotByUnit(int x, int y, int r, byte dir) {
 	if (xx < SpLx && yy < SpLy) {
 		int dx = (r * TCos[dir]) >> 8;
 		int dy = (r * TSin[dir]) >> 8;
-		int h = (rand() & 1023);
+
+		int h = (rand() & 1023) - 512;
 		SetPoint(Wave0, xx + dx + 8, yy + dy + 8, 2, h);
 		SetPoint(Wave1, xx + dx + 8, yy + dy + 8, 2, h);
 		SetPoint(Wave2, xx + dx + 8, yy + dy + 8, 2, h);

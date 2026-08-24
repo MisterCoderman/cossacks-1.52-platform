@@ -1017,6 +1017,26 @@ bool OneObject::CreatePrePath(int x1, int y1)
 			// past it), so no other change is needed for it to trace a way around from here.
 			FILE* plog = _plog_fopen();
 			if (plog) { fprintf(plog, "[PATH] InLocked no direct-line escape, trying wall-trace x=%d y=%d Pps=%d\n", x, y, Pps); fclose(plog); }
+			{
+				int bestDir = -1, bestScore = 0x7fffffff;
+				for (int d = 0; d < 8; d++) {
+					int nx = x + nidrx[d], ny = y + nidry[d];
+					if (MFI->CheckBar(nx, ny, Lx, Lx)) continue;
+					int score = abs(nx - x1) + abs(ny - y1);
+					if (score < bestScore) { bestScore = score; bestDir = d; }
+				}
+				if (bestDir >= 0) {
+					if (PathX) { free(PathX); PathX = nullptr; }
+					if (PathY) { free(PathY); PathY = nullptr; }
+					PathX = new short[1];
+					PathY = new short[1];
+					PathX[0] = (short)(x + nidrx[bestDir]);
+					PathY[0] = (short)(y + nidry[bestDir]);
+					NIPoints = 1;
+					return true;
+				}
+				// Boxed in on all 8 sides (rare) - fall back to the wall trace as a last resort.
+			}
 			escapeFromLocked = true;
 		}
 		else {
@@ -1353,10 +1373,6 @@ bool OneObject::CreatePrePath2(int x1, int y1) {
 	MotionField* MFI = &MFIELDS[LockType];
 	if (GLock)MFI->BClrBar(x, y, Lx);
 	bool InLocked = MFI->CheckBar(x, y, Lx, Lx);
-	if (InLocked && PathX) {
-		if (GLock)MFI->BClrBar(x, y, Lx);
-		return false;
-	};
 	int sdx = x1 - x;
 	int	sdy = y1 - y;
 	int	Cum = 0;
@@ -1566,29 +1582,53 @@ bool OneObject::CreatePrePath2(int x1, int y1) {
 	}
 	#endif
 	Pps--;
+	bool escapeFromLocked = false;
 	if (InLocked)
 	{
 		int uu;
 		for (uu = 0; uu < Pps && MFI->CheckBar(pxx[uu], pyy[uu], Lx, Lx); uu++);
-		if (uu >= Pps) return false;
-
-		// Освобождаем старую память, если она была выделена
-		if (PathX) {
-			free(PathX);
-			PathX = nullptr;
+		if (uu >= Pps) {
+			{
+				int bestDir = -1, bestScore = 0x7fffffff;
+				for (int d = 0; d < 8; d++) {
+					int nx = x + nidrx[d], ny = y + nidry[d];
+					if (MFI->CheckBar(nx, ny, Lx, Lx)) continue;
+					int score = abs(nx - x1) + abs(ny - y1);
+					if (score < bestScore) { bestScore = score; bestDir = d; }
+				}
+				if (bestDir >= 0) {
+					if (PathX) { free(PathX); PathX = nullptr; }
+					if (PathY) { free(PathY); PathY = nullptr; }
+					PathX = new short[1];
+					PathY = new short[1];
+					PathX[0] = (short)(x + nidrx[bestDir]);
+					PathY[0] = (short)(y + nidry[bestDir]);
+					NIPoints = 1;
+					return true;
+				}
+				// Boxed in on all 8 sides (rare) - fall back to the wall trace as a last resort.
+			}
+			escapeFromLocked = true;
 		}
-		if (PathY) {
-			free(PathY);
-			PathY = nullptr;
-		}
+		else {
+			// Освобождаем старую память, если она была выделена
+			if (PathX) {
+				free(PathX);
+				PathX = nullptr;
+			}
+			if (PathY) {
+				free(PathY);
+				PathY = nullptr;
+			}
 
-		// Выделяем новую память
-		PathX = new short[1];
-		PathY = new short[1];
-		PathX[0] = pxx[uu];
-		PathY[0] = pyy[uu];
-		NIPoints = 1;
-		return true;
+			// Выделяем новую память
+			PathX = new short[1];
+			PathY = new short[1];
+			PathX[0] = pxx[uu];
+			PathY[0] = pyy[uu];
+			NIPoints = 1;
+			return true;
+		}
 	};
 	bool RightPrefer = true;
 	int Rtx;//current point 
@@ -1613,15 +1653,19 @@ bool OneObject::CreatePrePath2(int x1, int y1) {
 	bool Rvis, Lvis;
 	//Проверяем прямую проходимость
 	int uu;
-	for (uu = 1; uu < Pps && !MFI->CheckBar(pxx[uu], pyy[uu], Lx, Lx); uu++);
-	if (uu == Pps)return false;
-	//Идем, пока не упремся в стенку
-	for (uu = 1; uu < Pps && !MFI->CheckBar(pxx[uu] - 1, pyy[uu] - 1, Lx + 2, Lx + 2); uu++);
-	Rpp = uu;
+	if (escapeFromLocked) {
+		Rpp = 0;
+	} else {
+		for (uu = 1; uu < Pps && !MFI->CheckBar(pxx[uu], pyy[uu], Lx, Lx); uu++);
+		if (uu == Pps)return false;
+		//Идем, пока не упремся в стенку
+		for (uu = 1; uu < Pps && !MFI->CheckBar(pxx[uu] - 1, pyy[uu] - 1, Lx + 2, Lx + 2); uu++);
+		Rpp = uu;
+	}
 	Rtx = pxx[Rpp];
 	Rty = pyy[Rpp];
-	int Rppm = uu;
-	int Lppm = uu;
+	int Rppm = Rpp;
+	int Lppm = Rpp;
 	// Если dx>dy,то на каждом шагу dx изменяетя строго на 1
 	if (Rtx != x1 || Rty != y1) {
 		//LLock[y][x]=false;
