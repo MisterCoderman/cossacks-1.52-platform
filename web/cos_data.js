@@ -197,5 +197,13 @@ addToLibrary({
       } catch (e) { /* try next base */ }
     }
     return -1;
+  },
+
+
+  cos_frame_yield__async: true,
+  cos_frame_yield: function () {
+    return Asyncify.handleAsync(function () {
+      return new Promise(function (resolve) { requestAnimationFrame(function () { resolve(); }); });
+    });
   }
 });

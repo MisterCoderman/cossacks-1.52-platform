@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\MainExe"
   ],
-  "SelectedNode": "\\Cossacks.sln",
+  "SelectedNode": "\\src\\MainExe\\Stringshash.cpp",
   "PreviewInSolutionExplorer": false
 }
