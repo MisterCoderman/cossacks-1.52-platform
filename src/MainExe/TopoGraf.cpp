@@ -120,6 +120,8 @@ bool AddArea(short x, short y, byte Sliv)
 		NAreas++;
 		return true;
 	}
+
+	return false;
 }
 
 void AddLink(int N1, int N2) {
