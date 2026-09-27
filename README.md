@@ -24,12 +24,12 @@ on any host with Docker to run the game and the online stack together.
 
 | | Link |
 |---|---|
-| Windows | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Windows.zip) |
-| macOS Intel| [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
-| macOS Apple Silicon| [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS-arm64.zip) |
-| Linux | [`<<< download link >>> `](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Linux.tar.gz) |
-| Web archive (single-player) | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Web-SinglePlayer.zip) |
-| Docker image (server + web) | [`<<< download link >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/cossacks152-image.tar.gz) |
+| Windows | [`<<< download link >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-Windows.zip) |
+| macOS Intel| [`<<< download link >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
+| macOS Apple Silicon| [`<<< download link >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-macOS-arm64.zip) |
+| Linux | [`<<< download link >>> `](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-Linux.tar.gz) |
+| Web archive (single-player) | [`<<< download link >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-Web-SinglePlayer.zip) |
+| Docker image (server + web) | [`<<< download link >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/cossacks152-image.tar.gz) |
 
 Source code, build recipes and server code are in this repository.
 
@@ -132,7 +132,7 @@ HOST=<public-ipv4> ./Prod/nodocker/start.sh
 
 **Important:** This repository contains **only the build code for the engine**. It is provided solely for reference.
 
-If you want to build **exactly the same version** as the original (with the full set of game assets), you need to download a separate version of the repository/archive from this [link](https://archive.org/download/cossacks-back-to-war-v-1.52/src-cossacks-1.52-platform.zip), which includes all game resources.
+If you want to build **exactly the same version** as the original (with the full set of game assets), you need to download a separate version of the repository/archive from this [link](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/src-cossacks-1.52-platform.zip), which includes all game resources.
 
 The repository is self-contained: a clean checkout builds the web game, Docker image, and desktop clients without files from the original game and without hardcoded paths (scripts self-detect via `emenv.sh`).
 
@@ -256,12 +256,12 @@ Docker, чтобы игра и онлайн-стек работали вмест
 
 | | Ссылка |
 |---|---|
-| Windows | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Windows.zip) |
-| macOS Intel| [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
-| macOS Apple Silicon| [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-macOS-arm64.zip) |
-| Linux | [`<<< ссылка >>> `](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Linux.tar.gz) |
-| Веб-архив (одиночная) | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/Cossacks152-Web-SinglePlayer.zip) |
-| Docker-образ (сервер + веб) | [`<<< ссылка >>>`](https://archive.org/download/cossacks-back-to-war-v-1.52/cossacks152-image.tar.gz) |
+| Windows | [`<<< ссылка >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-Windows.zip) |
+| macOS Intel| [`<<< ссылка >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-macOS.zip) |
+| macOS Apple Silicon| [`<<< ссылка >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-macOS-arm64.zip) |
+| Linux | [`<<< ссылка >>> `](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-Linux.tar.gz) |
+| Веб-архив (одиночная) | [`<<< ссылка >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/Cossacks152-Web-SinglePlayer.zip) |
+| Docker-образ (сервер + веб) | [`<<< ссылка >>>`](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/cossacks152-image.tar.gz) |
 
 Исходный код, рецепты сборки и код серверов — в этом репозитории.
 
@@ -363,7 +363,7 @@ HOST=<публичный-ipv4> ./Prod/nodocker/start.sh
 # Сборка из исходников
 
 **Важно:** В этом репозитории находится **только код для сборки движка**. Он предоставлен исключительно для ознакомления.  
-Если вы хотите собрать **точно такую же версию**, как оригинальная (с полным набором игровых ресурсов), вам нужно загрузить отдельную версию репозитория/архива по этой [ссылке](https://archive.org/download/cossacks-back-to-war-v-1.52/src-cossacks-1.52-platform.zip), которая включает все игровые ресурсы.
+Если вы хотите собрать **точно такую же версию**, как оригинальная (с полным набором игровых ресурсов), вам нужно загрузить отдельную версию репозитория/архива по этой [ссылке](https://ia800504.us.archive.org/25/items/cossacks-back-to-war-v-1.52/src-cossacks-1.52-platform.zip), которая включает все игровые ресурсы.
 
 Репозиторий самодостаточен: чистый checkout собирает веб-игру, Docker-образ и десктоп-клиенты без
 файлов из оригинальной игры и без хардкод-путей (скрипты самоопределяются через `emenv.sh`).
