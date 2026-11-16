@@ -48,6 +48,7 @@ static int    wi_lastx = -1, wi_lasty = -1;      // last pushed int position
 static int    wi_locked = 0;                     // document.pointerLockElement == canvas
 static int    wi_ingame = 0, wi_fs = 0;          // set by engine (FlipPages poll)
 static int    wi_buttons = 0;                    // MK_LBUTTON|MK_RBUTTON mirror
+static int    wi_macos = 0;                      // Electron macOS enhancements only
 
 // canvas metrics: backing (bw,bh) + CSS (cw,ch)
 static void wi_canvas_metrics(double* bw, double* bh, double* cw, double* ch) {
@@ -91,6 +92,13 @@ static void wi_motion(void) {
     if (x == wi_lastx && y == wi_lasty) return;
     wi_lastx = x; wi_lasty = y;
     wi_push(WM_MOUSEMOVE, (WPARAM)wi_buttons, MAKELPARAM(x, y));
+}
+static void wi_release_buttons(void) {
+    if (wi_buttons & MK_LBUTTON)
+        wi_push(WM_LBUTTONUP, 0, MAKELPARAM((int)wi_vx, (int)wi_vy));
+    if (wi_buttons & MK_RBUTTON)
+        wi_push(WM_RBUTTONUP, 0, MAKELPARAM((int)wi_vx, (int)wi_vy));
+    wi_buttons = 0;
 }
 
 // ---- HTML5 callbacks -----------------------------------------------------------------------------
@@ -137,6 +145,11 @@ extern "C" void cos_bridge_text_push(unsigned short wch);     // SdlEventBridge:
 
 static bool wi_on_key(int eventType, const EmscriptenKeyboardEvent* e, void*) {
     int vk = (int)e->keyCode;
+    // Electron/macOS can report keyCode=0 for Escape while pointer lock or the
+    // fullscreen system-bar handler is active.  The semantic key/code remains
+    // available, so normalize it explicitly before handing the event to Win32.
+    if (!vk && (!strcmp(e->key, "Escape") || !strcmp(e->code, "Escape")))
+        vk = VK_ESCAPE;
     if (vk <= 0 || vk > 255) return false;
     int down = (eventType == EMSCRIPTEN_EVENT_KEYDOWN) ? 1 : 0;
     cos_bridge_key_state(vk, down);
@@ -163,13 +176,20 @@ static bool wi_on_key(int eventType, const EmscriptenKeyboardEvent* e, void*) {
 static bool wi_on_focus(int eventType, const EmscriptenFocusEvent*, void*) {
     // blur -> release all keys (no stuck Alt/Ctrl after tab-switch) + WM_ACTIVATEAPP
     int gained = (eventType == EMSCRIPTEN_EVENT_FOCUS) ? 1 : 0;
-    if (!gained) for (int vk = 0; vk < 256; vk++) cos_bridge_key_state(vk, 0);
+    if (!gained) {
+        for (int vk = 0; vk < 256; vk++) cos_bridge_key_state(vk, 0);
+        if (wi_macos) wi_release_buttons();
+        wi_locked = 0;
+    }
     wi_push(0x001C /*WM_ACTIVATEAPP*/, (WPARAM)gained, 0);
     return false;
 }
 
 static bool wi_on_lockchange(int, const EmscriptenPointerlockChangeEvent* e, void*) {
+    int wasLocked = wi_locked;
     wi_locked = e->isActive ? 1 : 0;
+    if (wi_macos && wasLocked && !wi_locked) wi_release_buttons();
+    wi_lastx = wi_lasty = -1;
     return false;
 }
 
@@ -218,13 +238,19 @@ extern "C" void cos_webinput_rebind(void) {
 extern "C" void cos_webinput_init(void) {
     static int done = 0;
     if (done) return; done = 1;
+    wi_macos = EM_ASM_INT({
+        return (window.cosElectron && window.cosElectron.platform === 'darwin') ? 1 : 0;
+    });
     cos_webinput_attach();
     wi_vx = RealLx * 0.5; wi_vy = RealLy * 0.5;
 }
 // Called from the engine when the game/fullscreen state flips (FlipPages poll in Ddini.cpp).
 extern "C" void cos_webinput_state(int ingame, int fullscreen) {
     wi_ingame = ingame; wi_fs = fullscreen;
-    if (!ingame && wi_locked) emscripten_exit_pointerlock();   // menus: always a free cursor
+    if (!ingame) {
+        if (wi_macos) wi_release_buttons();
+        if (wi_locked) emscripten_exit_pointerlock();   // menus: always a free cursor
+    }
 }
 // Drain one converted Win32 message; returns 1 if msg filled.
 extern "C" int cos_webinput_poll(UINT* message, WPARAM* wParam, LPARAM* lParam) {

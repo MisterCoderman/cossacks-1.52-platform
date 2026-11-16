@@ -81,6 +81,9 @@ extern word dwVersion;
 static void ResolveUserMissionLaunchPaths(const char* inPath, char* mapOut, int mapOutSize, char* dllOut, int dllOutSize, char* briefOut, int briefOutSize);
 
 extern int exFMode;
+extern int FPSTime;
+extern int SyncedFPSTime;
+extern bool advanceWorldAnimations;
 //Was used to distinguish between GameSpy and GSC-Game.Net
 //Probably obsolete, but could also be some sort of "game active" indicator
 bool use_gsc_network_protocol = false;
@@ -6319,6 +6322,76 @@ void PlayRandomTrack();
 extern byte TracksMask[16];
 char RECFILE[128] = "";
 
+// Spread the useful simulation speeds across the rail.  The saved value and
+// multiplayer command remain the original FPSTime (milliseconds per half-step).
+// Left = 200 ms/tick, quarter = 66 ms, middle = the original 40 ms,
+// three quarters = 26 ms, right = 16 ms.
+static int GameSpeedFromSlider(int position)
+{
+	if (position < 0)position = 0;
+	if (position > 100)position = 100;
+	if (position <= 25)return 100 - (position * 67 + 12) / 25;
+	if (position <= 50)return 33 - ((position - 25) * 13 + 12) / 25;
+	if (position <= 75)return 20 - ((position - 50) * 7 + 12) / 25;
+	return 13 - ((position - 75) * 5 + 12) / 25;
+}
+
+static int GameSpeedSliderPosition(int fpsTime)
+{
+	int closestPosition = 0;
+	int smallestDifference = 100;
+	for (int position = 0; position <= 100; position++)
+	{
+		int difference = abs(GameSpeedFromSlider(position) - fpsTime);
+		if (difference < smallestDifference)
+		{
+			smallestDifference = difference;
+			closestPosition = position;
+		}
+	}
+	return closestPosition;
+}
+
+// Read the press in the options loop before DialogsSystem consumes Lpressed.
+// Keep tracking realLpressed while the mouse is held so dragging works too.
+static void UpdateGameSpeedRail(VScrollBar* slider)
+{
+	if (slider->Enabled && slider->Visible && (Lpressed || realLpressed) &&
+		mouseX >= slider->x && mouseX <= slider->x1 &&
+		mouseY >= slider->y - 16 && mouseY <= slider->y + 16)
+	{
+		int travel = slider->LineLx - slider->ScrLx;
+		int position = travel > 0 ?
+			(mouseX - slider->x - slider->ScrDx - slider->ScrLx / 2) * slider->SMaxPos / travel : 0;
+		if (position < 0)position = 0;
+		if (position > slider->SMaxPos)position = slider->SMaxPos;
+		if (slider->SPos != position)
+			slider->NeedToDraw = true;
+		slider->SPos = position;
+		Lpressed = false;
+	}
+}
+
+static void EnableGameSpeedRail(VScrollBar* slider)
+{
+	// addGP_ScrollBarL leaves y1 uninitialized.
+	slider->y1 = slider->y + slider->LineLy - 1;
+}
+
+// Keep the original slow/fast unit modes selectable with one click on the
+// closed field in both options dialogs.
+static void UpdateUnitSpeedChoice(ComboBox* selector)
+{
+	if (selector->Enabled && selector->Visible && Lpressed && !selector->IsActive &&
+		mouseX >= selector->x && mouseX <= selector->x1 &&
+		mouseY >= selector->y && mouseY <= selector->y1)
+	{
+		selector->CurLine = selector->CurLine ? 0 : 1;
+		selector->NeedToDraw = true;
+		Lpressed = false;
+	}
+}
+
 extern int screen_width;
 extern int screen_height;
 extern double screen_ratio;
@@ -6361,9 +6434,11 @@ bool ProcessMenuOptions()
 	GPPicture* P1 = MMenu.addGPPicture(nullptr, 240, 317 + 10 - 13, BTNS.GPID, 13);
 	GPPicture* P2 = MMenu.addGPPicture(nullptr, 240, 343 + 10 - 13, BTNS.GPID, 14);
 	GPPicture* P3 = MMenu.addGPPicture(nullptr, 240, 447 + 10 - 13, BTNS.GPID, 15);
+	GPPicture* P4 = MMenu.addGPPicture(nullptr, 240, 473 + 10 - 13, BTNS.GPID, 16);
 	P1->Visible = 0;
 	P2->Visible = 0;
 	P3->Visible = 0;
+	P4->Visible = 0;
 
 	//sound volume (#1)
 	VScrollBar* SVL = MMenu.addGP_ScrollBarL(nullptr, X0, 346 + DY + 10 - 13, 100, WarSound, BTNS.GPID, 12, LX, 12, 0, 0);
@@ -6404,9 +6479,12 @@ bool ProcessMenuOptions()
 #ifdef __EMSCRIPTEN__
 		{
 			// Mark the monitor's TRUE native mode; it is also the fullscreen default.
-			extern int cos_native_w, cos_native_h;
+			extern int cos_native_w, cos_native_h, cos_mac_logical_w, cos_mac_logical_h;
 			if (ModeLX[i] == cos_native_w && ModeLY[i] == cos_native_h)
-				sprintf(cc, "%dx%d NATIVE", ModeLX[i], ModeLY[i]);
+				sprintf(cc, "%dx%d %s", ModeLX[i], ModeLY[i],
+					cos_mac_logical_w ? "NATIVE RETINA" : "NATIVE");
+			else if (ModeLX[i] == cos_mac_logical_w && ModeLY[i] == cos_mac_logical_h)
+				sprintf(cc, "%dx%d RETINA 2x", ModeLX[i], ModeLY[i]);
 			else
 				sprintf(cc, "%dx%d %c", ModeLX[i], ModeLY[i], c);
 		}
@@ -6425,11 +6503,16 @@ bool ProcessMenuOptions()
 		VMode->CurLine = 0;
 	}
 
-	//Game speed mode
 	ComboBox* FMode = MMenu.addGP_ComboBox(nullptr, 240, 421 + 10 - 13, BTNS.GPID, 0, 9, 0, &WhiteFont, &YellowFont, nullptr);
 	FMode->AddLine(SLOWMOD);
 	FMode->AddLine(FASTMOD);
 	FMode->CurLine = exFMode;
+
+	// Simulation cadence slider, independent of unit speed.
+	VScrollBar* GameSpeed = MMenu.addGP_ScrollBarL(nullptr, X0, 476 + DY + 10 - 13,
+		100, GameSpeedSliderPosition(FPSTime), BTNS.GPID, 12, LX, 12, 0, 0);
+	EnableGameSpeedRail(GameSpeed);
+	const int initialGameSpeedPosition = GameSpeed->SPos;
 
 	ComboBox* MUS = MMenu.addGP_ComboBox(nullptr, 240, 240 - 16 + 80 - 3 - 13, BTNS.GPID, 0, 9, 0, &WhiteFont, &YellowFont, nullptr);
 	MUS->AddLine(GetTextByID("NOCD"));
@@ -6464,9 +6547,12 @@ bool ProcessMenuOptions()
 		P1->Visible = P1->MouseOver;
 		P2->Visible = P2->MouseOver;
 		P3->Visible = P3->MouseOver;
+		P4->Visible = P4->MouseOver;
 
 		ProcessMessages();
 		StdKeys();
+		UpdateUnitSpeedChoice(FMode);
+		UpdateGameSpeedRail(GameSpeed);
 		MMenu.MarkToDraw();
 		MMenu.ProcessDialogs();
 		MMenu.RefreshView();
@@ -6500,6 +6586,8 @@ bool ProcessMenuOptions()
 		MidiSound = MVL->SPos;
 		PlayMode = MUS->CurLine;
 		exFMode = FMode->CurLine;
+		if (GameSpeed->SPos != initialGameSpeedPosition)
+			FPSTime = GameSpeedFromSlider(GameSpeed->SPos);
 		RecordMode = RECSTATE;
 #ifdef __EMSCRIPTEN__
 		// Persist NOW: on Windows these globals were written to mode.dat only at process exit,
@@ -6565,9 +6653,11 @@ bool ProcessGameOptions()
 	GPPicture* P1 = MMenu.addGPPicture(nullptr, 240, 317 + 11, BTNS.GPID, 15);
 	GPPicture* P2 = MMenu.addGPPicture(nullptr, 240, 343 + 11, BTNS.GPID, 16);
 	GPPicture* P3 = MMenu.addGPPicture(nullptr, 240, 447 + 11, BTNS.GPID, 17);
+	GPPicture* P4 = MMenu.addGPPicture(nullptr, 240, 473 + 11, BTNS.GPID, 18);
 	P1->Visible = 0;
 	P2->Visible = 0;
 	P3->Visible = 0;
+	P4->Visible = 0;
 
 	//sound volume (#1)
 	MidiSound = GetCDVolume();
@@ -6604,9 +6694,12 @@ bool ProcessGameOptions()
 #ifdef __EMSCRIPTEN__
 		{
 			// Mark the monitor's TRUE native mode; it is also the fullscreen default.
-			extern int cos_native_w, cos_native_h;
+			extern int cos_native_w, cos_native_h, cos_mac_logical_w, cos_mac_logical_h;
 			if (ModeLX[i] == cos_native_w && ModeLY[i] == cos_native_h)
-				sprintf(cc, "%dx%d NATIVE", ModeLX[i], ModeLY[i]);
+				sprintf(cc, "%dx%d %s", ModeLX[i], ModeLY[i],
+					cos_mac_logical_w ? "NATIVE RETINA" : "NATIVE");
+			else if (ModeLX[i] == cos_mac_logical_w && ModeLY[i] == cos_mac_logical_h)
+				sprintf(cc, "%dx%d RETINA 2x", ModeLX[i], ModeLY[i]);
 			else
 				sprintf(cc, "%dx%d %c", ModeLX[i], ModeLY[i], c);
 		}
@@ -6625,15 +6718,22 @@ bool ProcessGameOptions()
 		VMode->CurLine = 0;
 	}
 
-	//Speedmode
 	ComboBox* FMode = MMenu.addGP_ComboBox(nullptr, 240, 421 + 11, BTNS.GPID, 0, 9, 0, &WhiteFont, &YellowFont, nullptr);
 	FMode->AddLine(SLOWMOD);
 	FMode->AddLine(FASTMOD);
 	FMode->CurLine = exFMode;
-	if (1 < NPlayers)
-	{//Disable speed mode drop down list in multiplayer
+
+	VScrollBar* GameSpeed = MMenu.addGP_ScrollBarL(nullptr, X0, 476 + DY + 11,
+		100, GameSpeedSliderPosition(NPlayers > 1 && MyDPID != ServerDPID ? SyncedFPSTime : FPSTime),
+		BTNS.GPID, 12, LX, 12, 0, 0);
+	EnableGameSpeedRail(GameSpeed);
+	const int initialGameSpeedPosition = GameSpeed->SPos;
+	if (1 < NPlayers && MyDPID != ServerDPID)
+	{//Only the host can change the synchronized speed in multiplayer
 		FMode->Enabled = false;
 		FMode->Active = false;
+		GameSpeed->Enabled = false;
+		GameSpeed->Active = false;
 	}
 
 	ComboBox* MUS = MMenu.addGP_ComboBox(nullptr, 240, 240 - 15 + 80 - 3, BTNS.GPID, 0, 9, 0, &WhiteFont, &YellowFont, nullptr);
@@ -6659,8 +6759,11 @@ bool ProcessGameOptions()
 		P1->Visible = P1->MouseOver;
 		P2->Visible = P2->MouseOver;
 		P3->Visible = P3->MouseOver;
+		P4->Visible = P4->MouseOver;
 		ProcessMessages();
 		StdKeys();
+		UpdateUnitSpeedChoice(FMode);
+		UpdateGameSpeedRail(GameSpeed);
 		MMenu.MarkToDraw();
 		MMenu.ProcessDialogs();
 		MMenu.RefreshView();
@@ -6685,9 +6788,11 @@ bool ProcessGameOptions()
 		ScrollSpeed = SSP->SPos + 2;
 
 		//Just in case
-		if (1 == NPlayers)
-		{//Allow ingame speed mode changing only for single player
+		if (1 == NPlayers || MyDPID == ServerDPID)
+		{//The host publishes the selected speed through the deterministic command buffer
 			exFMode = FMode->CurLine;
+			if (GameSpeed->SPos != initialGameSpeedPosition)
+				FPSTime = GameSpeedFromSlider(GameSpeed->SPos);
 		}
 
 		if (RealLx != ModeLX[VMode->CurLine] || RealLy != ModeLY[VMode->CurLine])
@@ -9043,6 +9148,8 @@ void FastScreenProcess()
 
 void PreDrawGameProcess();
 void PostDrawGameProcess();
+void GameKeyCheck();
+extern byte PauseMode;
 void IAmLeft();
 extern bool LockPause;
 bool ShowStatistics();
@@ -9186,6 +9293,7 @@ void PlayGame()
 		SetGameDisplayModeAnyway(exRealLx, exRealLy);
 	}
 
+	advanceWorldAnimations = false;
 	DrawAllScreen();
 	GameNeedToDraw = false;
 	GameExit = false;
@@ -9195,10 +9303,17 @@ void PlayGame()
 	{
 		StartAboutTime = GetTickCount();
 	}
+	unsigned long lastSimulationTick = 0;
+	unsigned long frameStart = 0;
+	unsigned long simulationNow = 0;
+	unsigned int simulationInterval = 0;
+	bool runSimulation = false;
 
 StartPlay://IMPORTANT: Main game loop
+	lastSimulationTick = 0;
 	do
 	{
+		frameStart = GetRealTime();
 		if (RUNMAPEDITOR || RUNUSERMISSION)
 		{
 			GameExit = true;
@@ -9208,14 +9323,30 @@ StartPlay://IMPORTANT: Main game loop
 
 		_hb("PM1");
 		ProcessMessages();
+		if (PauseMode)
+			GameKeyCheck();
+		simulationNow = GetRealTime();
+		simulationInterval = SyncedFPSTime * 2;
+		if (simulationInterval < 16)
+			simulationInterval = 16;
+		runSimulation = !PauseMode &&
+			(!lastSimulationTick || simulationNow - lastSimulationTick >= simulationInterval);
 
 		if (bActive)
 		{
 			extern int _wallShowPostCreate;
 			HANDLE _hHeap = GetProcessHeap();
 			GameMode = 0;
-			_hb("PreDraw");
-			PreDrawGameProcess();
+			if (runSimulation)
+			{
+				lastSimulationTick = simulationNow;
+				_hb("PreDraw");
+				PreDrawGameProcess();
+			}
+			else if (!PauseMode)
+			{
+				GameKeyCheck();
+			}
 
 			if (_wallShowPostCreate > 0) {
 				FILE* wlog = _wlog_fopen();
@@ -9225,6 +9356,7 @@ StartPlay://IMPORTANT: Main game loop
 			_hb("PM2");
 			ProcessMessages();
 
+			advanceWorldAnimations = runSimulation;
 			if (GameNeedToDraw)
 			{
 				_hb("DrawAll");
@@ -9236,6 +9368,7 @@ StartPlay://IMPORTANT: Main game loop
 				_hb("FastScr");
 				FastScreenProcess();
 			}
+			advanceWorldAnimations = false;
 
 			if (_wallShowPostCreate > 0) {
 				FILE* wlog = _wlog_fopen();
@@ -9247,9 +9380,12 @@ StartPlay://IMPORTANT: Main game loop
 
 			time1 = GetRealTime();
 
-			_hb("PostDraw");
-			PostDrawGameProcess();
-			_hb_frame++;
+			if (runSimulation)
+			{
+				_hb("PostDraw");
+				PostDrawGameProcess();
+				_hb_frame++;
+			}
 
 			if (_wallShowPostCreate > 0) {
 				FILE* wlog = _wlog_fopen();
@@ -9320,6 +9456,8 @@ StartPlay://IMPORTANT: Main game loop
 		}
 
 	resgame:;
+		while (GetRealTime() - frameStart < 16)
+			ProcessMessages();
 
 	} while (!GameExit);
 
@@ -9418,6 +9556,7 @@ StartPlay://IMPORTANT: Main game loop
 		}
 		g_cos_menu_fixed_req = 0;
 	}
+	advanceWorldAnimations = true;
 }
 
 void DrawAllEditScreen()

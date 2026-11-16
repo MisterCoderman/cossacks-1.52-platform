@@ -22,6 +22,6 @@
     "extraResources": [{ "from": "../game", "to": "web", "filter": ["**/*", "!relay.json"] }],
     "win": { "target": "dir", "icon": "icon.ico" },
     "linux": { "target": "AppImage", "icon": "icon.png", "category": "Game" },
-    "mac": { "target": "zip", "identity": null }
+    "mac": { "target": "zip", "identity": null, "category": "public.app-category.games", "darkModeSupport": true }
   }
 }

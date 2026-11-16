@@ -187,7 +187,8 @@ extern "C" int  cos_webgl_init(void);                             // WebRender.c
 extern "C" void cos_webgl_backing(int w, int h);
 extern "C" void cos_webgl_palette(const unsigned char* rgba256);
 extern "C" void cos_webgl_present(const unsigned char* idx, int w, int h, int pitch);
-int cos_native_w = 0, cos_native_h = 0;                           
+int cos_native_w = 0, cos_native_h = 0;
+int cos_mac_logical_w = 0, cos_mac_logical_h = 0;
 extern "C" void cos_webinput_attach(void);                        
 extern "C" void cos_frame_yield(void);                            
 extern "C" int cos_browser_fullscreen(void){
@@ -196,6 +197,27 @@ extern "C" int cos_browser_fullscreen(void){
         if (document.fullscreenElement || document.webkitFullscreenElement) return 1;
         if (window.cosElectron && window.cosElectron.isFullscreen && window.cosElectron.isFullscreen()) return 1;
         return 0;
+    });
+}
+static bool cos_electron_macos(void) {
+    return EM_ASM_INT({
+        return (window.cosElectron && window.cosElectron.platform === 'darwin') ? 1 : 0;
+    }) != 0;
+}
+static void cos_macos_display(int* nativeW, int* nativeH, int* logicalW, int* logicalH) {
+    *nativeW = *nativeH = *logicalW = *logicalH = 0;
+    if (!cos_electron_macos()) return;
+    *nativeW = EM_ASM_INT({
+        try { return (window.cosElectron.displayInfo().nativeWidth || 0) | 0; } catch (e) { return 0; }
+    });
+    *nativeH = EM_ASM_INT({
+        try { return (window.cosElectron.displayInfo().nativeHeight || 0) | 0; } catch (e) { return 0; }
+    });
+    *logicalW = EM_ASM_INT({
+        try { return (window.cosElectron.displayInfo().logicalWidth || 0) | 0; } catch (e) { return 0; }
+    });
+    *logicalH = EM_ASM_INT({
+        try { return (window.cosElectron.displayInfo().logicalHeight || 0) | 0; } catch (e) { return 0; }
     });
 }
 void cos_tab_px(int* w, int* h){
@@ -510,8 +532,35 @@ bool EnumModesOnly() {
     // Matching DPR makes fullscreen 1:1 pixel-perfect and consistent with the backing.
     int nw = EM_ASM_INT({ return Math.round(screen.width  * (window.devicePixelRatio || 1)); });
     int nh = EM_ASM_INT({ return Math.round(screen.height * (window.devicePixelRatio || 1)); });
+    int macLogicalW = 0, macLogicalH = 0;
+    if (cos_electron_macos()) {
+        int macNativeW = 0, macNativeH = 0;
+        cos_macos_display(&macNativeW, &macNativeH, &macLogicalW, &macLogicalH);
+        if (macNativeW >= 1024 && macNativeH >= 768) { nw = macNativeW; nh = macNativeH; }
+        cos_mac_logical_w = macLogicalW;
+        cos_mac_logical_h = macLogicalH;
+    }
     cos_native_w = nw; cos_native_h = nh;    // remembered so the UI can tag the native mode
     if (nw >= 1024 && nh >= 768) { ModeLX[NModes] = nw; ModeLY[NModes] = nh; NModes++; }
+
+    // Apple Silicon MacBooks expose the panel in logical points and Retina
+    // backing pixels. Offer both, plus two exact-aspect intermediate modes. This
+    // keeps UI scale practical while still allowing true 1:1 native rendering.
+    if (cos_electron_macos() && macLogicalW >= 1024 && macLogicalH >= 768) {
+        const int macModes[][2] = {
+            {macLogicalW, macLogicalH},
+            {(nw * 2 / 3) & ~1, (nh * 2 / 3) & ~1},
+            {(nw * 3 / 4) & ~1, (nh * 3 / 4) & ~1}
+        };
+        for (int i = 0; i < 3 && NModes < 32; i++) {
+            int w = macModes[i][0], h = macModes[i][1];
+            if (w < 1024 || h < 768 || w > nw || h > nh) continue;
+            bool exists = false;
+            for (int j = 0; j < NModes; j++)
+                if (ModeLX[j] == w && ModeLY[j] == h) { exists = true; break; }
+            if (!exists) { ModeLX[NModes] = w; ModeLY[NModes] = h; NModes++; }
+        }
+    }
     for (int i = 0; i < (int)(sizeof(emModes) / sizeof(emModes[0])) && NModes < 32; i++) {
         int w = emModes[i][0], h = emModes[i][1];
         if (w == nw && h == nh) continue;                 // don't duplicate the native mode

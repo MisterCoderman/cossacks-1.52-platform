@@ -49,6 +49,18 @@ For internet rooms on a server, configure `relay.json` — see [Connecting a des
 
 If a server is running, open `http://<server>:8790/`. Nothing to install.
 
+### French game data
+
+The launch page supports English, Russian and French. The French option uses the same shared
+assets as English, plus a French `ALL.GSC` extracted to `web/data/fr`. To import a legitimately
+licensed French installation, run:
+
+    python3 tools/gsc_unpack.py "/path/to/Cossacks Back to War/bin/ALL.GSC" web/data/fr
+
+The command writes `manifest.txt` and `manifest_local.txt` automatically. The generated game data
+is intentionally not committed: it is copyrighted game content and belongs in a locally built
+package or a separately authorized release asset.
+
 The web build caches aggressively: the `data/` asset tree (~1.5 GB) is served with a one-year
 `immutable` cache and is fetched only on first load; only the engine core (`dmcr.wasm`, ~63 MB) is
 revalidated so fixes are always picked up. Repeat visits do not re-download the game.

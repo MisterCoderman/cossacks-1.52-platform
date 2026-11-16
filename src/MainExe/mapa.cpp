@@ -1529,6 +1529,10 @@ void ShowPulse();
 void AddPulse(word ObjID, byte c);
 void ProcessFog1();
 void CreateFogImage();
+// Rendering can run more often than simulation at lower game speeds. Keep
+// fog discovery/smoothing on simulation ticks, while rebuilding its visible
+// image every frame so camera movement remains smooth.
+extern bool advanceWorldAnimations;
 extern int DoLink_Time, SearchVictim_Time, CheckCapture_Time;
 void SyncroDoctor();
 void PrepareSound();
@@ -2122,7 +2126,7 @@ void GFieldShow()
 	{
 		time0 = GetRealTime();
 
-		if (NOPAUSE && !(LockFog || NoPFOG))
+		if (advanceWorldAnimations && NOPAUSE && !(LockFog || NoPFOG))
 		{
 			ProcessFog1();
 		}
@@ -4542,168 +4546,179 @@ PrInfo:;
 
 extern int LastScrollTime;
 
-//Handle scrolling via mouse and keys and jumping via minimap
-//Call rate: ~40 Hz
-//FUNNY: Mostly called ingame from FastScreenProcess()
-//Sometimes ProcessScreen() cuts in and raises call rate up to ~190 Hz
-//This results in absurd scroll rates in multiplayer games
-//Bug fixed by removing function call from ProcessScreen()
+// Handle scrolling via mouse and keys and jumping via minimap. The camera
+// advances at 25 steps per real second, independently of simulation cadence.
 void EDGETEST()
 {
 	int x = mouseX;
 	int y = mouseY;
+	static unsigned int lastCameraTick = 0;
+	static unsigned int cameraRemainder = 0;
+	const unsigned int cameraStepMs = 40;
+	unsigned int now = GetTickCount();
+	unsigned int elapsed = lastCameraTick ? now - lastCameraTick : cameraStepMs;
+	lastCameraTick = now;
+	// A menu or a suspended window must not cause a large catch-up jump.
+	if (elapsed > 500)elapsed = cameraStepMs;
+	else if (elapsed > 200)elapsed = 200;
+	cameraRemainder += elapsed;
+	int cameraSteps = cameraRemainder / cameraStepMs;
+	cameraRemainder %= cameraStepMs;
 
 	if (SHOWSLIDE)
 	{
-		bool MoveX = false;
-		bool MoveY = false;
 		int OLDMX = mapx;
 		int OLDMY = mapy;
-
-		//Check arrow keys
-		if (!(EnterChatMode || RESMODE))
+		for (int cameraStep = 0; cameraStep < cameraSteps; cameraStep++)
 		{
-			if (GetKeyState(VK_RIGHT) & 0x8000)
+			bool MoveX = false;
+			bool MoveY = false;
+
+			//Check arrow keys
+			if (!(EnterChatMode || RESMODE))
 			{
-				StepX = kKeyboardScrollSpeed;
-				MoveX = true;
+				if (GetKeyState(VK_RIGHT) & 0x8000)
+				{
+					StepX = kKeyboardScrollSpeed;
+					MoveX = true;
+				}
+
+				if (GetKeyState(VK_LEFT) & 0x8000)
+				{
+					StepX = -kKeyboardScrollSpeed;
+					MoveX = true;
+				}
+
+				if (GetKeyState(VK_UP) & 0x8000)
+				{
+					StepY = -kKeyboardScrollSpeed;
+					MoveY = true;
+				}
+
+				if (GetKeyState(VK_DOWN) & 0x8000)
+				{
+					StepY = kKeyboardScrollSpeed;
+					MoveY = true;
+				}
 			}
 
-			if (GetKeyState(VK_LEFT) & 0x8000)
+			//Check mouse scrolling (it has priority over arrow keys)
+			//Left
+			if (x < 6)
 			{
-				StepX = -kKeyboardScrollSpeed;
-				MoveX = true;
-			}
-
-			if (GetKeyState(VK_UP) & 0x8000)
-			{
-				StepY = -kKeyboardScrollSpeed;
-				MoveY = true;
-			}
-
-			if (GetKeyState(VK_DOWN) & 0x8000)
-			{
-				StepY = kKeyboardScrollSpeed;
-				MoveY = true;
-			}
-		}
-
-		//Check mouse scrolling (it has priority over arrow keys)
-		//Left
-		if (x < 6)
-		{
-			if (StepX > 0)
-			{
-				StepX = 0;
-			}
-			StepX--;
-			if (StepX < -ScrollSpeed)
-			{
-				StepX = -ScrollSpeed;
-			}
-			MoveX = true;
-		}
-		//Up
-		if (y < 6)
-		{
-			if (StepY > 0)
-			{
-				StepY = 0;
-			}
-			StepY--;
-			if (StepY < -ScrollSpeed)
-			{
-				StepY = -ScrollSpeed;
-			}
-			MoveY = true;
-		}
-		//Right
-		if (x > RealLx - 6)
-		{
-			if (StepX < 0)
-			{
-				StepX = 0;
-			}
-			StepX++;
-			if (StepX > ScrollSpeed)
-			{
-				StepX = ScrollSpeed;
-			}
-			MoveX = true;
-		}
-		//Down
-		if (y > RealLy - 6)
-		{
-			if (StepY < 0)
-			{
-				StepY = 0;
-			}
-			StepY++;
-			if (StepY > ScrollSpeed)
-			{
-				StepY = ScrollSpeed;
-			}
-			MoveY = true;
-		}
-
-		//Sanity checks?
-		if (StepX && !MoveX)
-		{
-			if (StepX > 0)
-			{
+				if (StepX > 0)
+				{
+					StepX = 0;
+				}
 				StepX--;
+				if (StepX < -ScrollSpeed)
+				{
+					StepX = -ScrollSpeed;
+				}
+				MoveX = true;
 			}
+			//Up
+			if (y < 6)
+			{
+				if (StepY > 0)
+				{
+					StepY = 0;
+				}
+				StepY--;
+				if (StepY < -ScrollSpeed)
+				{
+					StepY = -ScrollSpeed;
+				}
+				MoveY = true;
+			}
+			//Right
+			if (x > RealLx - 6)
+			{
+				if (StepX < 0)
+				{
+					StepX = 0;
+				}
+				StepX++;
+				if (StepX > ScrollSpeed)
+				{
+					StepX = ScrollSpeed;
+				}
+				MoveX = true;
+			}
+			//Down
+			if (y > RealLy - 6)
+			{
+				if (StepY < 0)
+				{
+					StepY = 0;
+				}
+				StepY++;
+				if (StepY > ScrollSpeed)
+				{
+					StepY = ScrollSpeed;
+				}
+				MoveY = true;
+			}
+
+			//Sanity checks?
+			if (StepX && !MoveX)
+			{
+				if (StepX > 0)
+				{
+					StepX--;
+				}
+				if (StepX < 0)
+				{
+					StepX++;
+				}
+			}
+			if (StepY && !MoveY)
+			{
+				if (StepY > 0)
+				{
+					StepY--;
+				}
+				if (StepY < 0)
+				{
+					StepY++;
+				}
+			}
+
+			//Adjust view window position
 			if (StepX < 0)
 			{
-				StepX++;
+				mapx -= -StepX / 2;
 			}
-		}
-		if (StepY && !MoveY)
-		{
-			if (StepY > 0)
+			else
 			{
-				StepY--;
+				mapx += StepX / 2;
 			}
 			if (StepY < 0)
 			{
-				StepY++;
+				mapy -= -StepY / 2;
 			}
-		}
+			else
+			{
+				mapy += StepY / 2;
+			}
 
-		//Adjust view window position
-		if (StepX < 0)
-		{
-			mapx -= -StepX / 2;
-		}
-		else
-		{
-			mapx += StepX / 2;
-		}
-		if (StepY < 0)
-		{
-			mapy -= -StepY / 2;
-		}
-		else
-		{
-			mapy += StepY / 2;
-		}
-
-		//Stop at map borders
-		if (mapx <= 0)
-		{
-			mapx = 1;
-		}
-		if (mapy <= 0)
-		{
-			mapy = 1;
-		}
-		if (mapx + smaplx > msx + 1)
-		{
-			mapx = msx - smaplx + 1;
-		}
-		if (mapy + smaply > msy + 1)
-		{
-			mapy = msy - smaply + 1;
+			//Stop at map borders
+			if (mapx <= 0)
+			{
+				mapx = 1;
+			}
+			if (mapy <= 0)
+			{
+				mapy = 1;
+			}
+			if (mapx + smaplx > msx + 1)
+			{
+				mapx = msx - smaplx + 1;
+			}
+			if (mapy + smaply > msy + 1)
+			{
+				mapy = msy - smaply + 1;
+			}
 		}
 
 		//Jump-scroll via minimap clicking
