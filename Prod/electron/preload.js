@@ -17,11 +17,19 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 let cosFsState = false;
 ipcRenderer.on('cos-fs', (ev, v) => { cosFsState = !!v; });
+let cosDisplayInfo = { platform: process.platform, scaleFactor: 1 };
+try { cosDisplayInfo = ipcRenderer.sendSync('cos-display-info') || cosDisplayInfo; } catch (e) {}
+ipcRenderer.on('cos-display-changed', (ev, info) => {
+  if (info) cosDisplayInfo = info;
+  try { window.dispatchEvent(new Event('resize')); } catch (e) {}
+});
 
 contextBridge.exposeInMainWorld('cosElectron', {
   // The engine's Exit menu -> window.cosOnExit() -> window.cosElectron.quit() (main.js handles it).
   quit() { ipcRenderer.send('cos-quit'); },
-  isFullscreen() { return cosFsState; }
+  isFullscreen() { return cosFsState; },
+  platform: process.platform,
+  displayInfo() { return Object.assign({}, cosDisplayInfo); }
 });
 
 // ---------------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@
 // data loader and relay.txt work identically to the website). Update the game = replace web/;
 // no Electron rebuild.
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
@@ -32,6 +32,28 @@ if (process.platform === 'win32') app.commandLine.appendSwitch('disable-features
 
 const WEB_DIR = path.join(__dirname, '..', 'web');
 let win = null;
+
+// macOS exposes display sizes in logical points.  The engine renders into a
+// physical-pixel canvas, so provide both coordinate spaces to the preload.
+function currentDisplayInfo() {
+  try {
+    const display = win ? screen.getDisplayMatching(win.getBounds()) : screen.getPrimaryDisplay();
+    const scale = Number(display.scaleFactor) || 1;
+    return {
+      platform: process.platform,
+      scaleFactor: scale,
+      logicalWidth: display.bounds.width,
+      logicalHeight: display.bounds.height,
+      workWidth: display.workArea.width,
+      workHeight: display.workArea.height,
+      nativeWidth: Math.round(display.bounds.width * scale),
+      nativeHeight: Math.round(display.bounds.height * scale),
+      internal: !!display.internal
+    };
+  } catch (e) {
+    return { platform: process.platform, scaleFactor: 1 };
+  }
+}
 
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm',
@@ -126,6 +148,7 @@ if (!app.requestSingleInstanceLock()) {
 
   // The engine's Exit menu -> window.cosOnExit() -> window.cosElectron.quit() sends this.
   ipcMain.on('cos-quit', () => app.quit());
+  ipcMain.on('cos-display-info', (ev) => { ev.returnValue = currentDisplayInfo(); });
 
   app.whenReady().then(async () => {
     const { srv, port } = await startServer();
@@ -153,6 +176,9 @@ if (!app.requestSingleInstanceLock()) {
       autoHideMenuBar: true,
       backgroundColor: '#000000',
       icon: path.join(__dirname, 'icon.png'),
+      // On macOS the first click after Cmd-Tab should reach the game, which is
+      // especially important for reacquiring pointer lock.
+      ...(process.platform === 'darwin' ? { acceptFirstMouse: true, fullscreenable: true } : {}),
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         contextIsolation: true,
@@ -171,6 +197,16 @@ if (!app.requestSingleInstanceLock()) {
     // Load the language chooser (index.html), same as the web version, so the player picks a
     // language; it then navigates to dmcr.html?lang=... The old direct dmcr.html load forced English.
     win.loadURL(`http://127.0.0.1:${port}/index.html`);
+
+    if (process.platform === 'darwin') {
+      // Keep the renderer informed when the MacBook changes scaling or moves
+      // between its internal Retina panel and an external display.
+      screen.on('display-metrics-changed', () => {
+        if (!win) return;
+        try { win.webContents.send('cos-display-changed', currentDisplayInfo()); } catch (e) {}
+      });
+      win.on('focus', () => { try { win.webContents.focus(); } catch (e) {} });
+    }
 
     // Window chrome model, identical on Windows/Linux/macOS:
     //   * Maximize (button or title double-click) -> TRUE borderless fullscreen over the taskbar.

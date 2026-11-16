@@ -369,8 +369,9 @@ bool fixed;
 //Timespan in ms after last LastCTRLPressTime which allows setting unit control groups
 const int kCtrlStickyTime = 50;
 
-//Minimal delay between two PostDrawGameProcess() returns, in ms
-const unsigned int kPostDrawInterval = 16;//~60 Hz
+// Keep loops that still call PostDrawGameProcess every frame from spinning.
+// The actual simulation cadence is scheduled separately in PlayGame().
+const unsigned int kMinimumPostDrawInterval = 16;
 
 //Time of the last PostDrawGameProcess() return
 unsigned long prev_postdraw_time = 0;
@@ -432,7 +433,9 @@ void _wd_activate(bool on) {
 }
 
 //Game version. Must match with other clients
-__declspec( dllexport ) word dwVersion = 152;
+// Command 69 now carries a separate cadence value above 1. Advertise a new
+// network revision so older 1.52 clients do not interpret it as unit speed.
+__declspec( dllexport ) word dwVersion = 152 | (1 << 8);
 __declspec( dllexport ) char LobbyVersion[32] = "1.52";
 __declspec( dllexport ) char BuildVersion[32] = "V 1.52";
 
@@ -448,7 +451,7 @@ int DrawGroundMode = 0;
 int DrawPixMode = 0;
 int Flips;
 int FoodID;
-int FrmDec = 2;
+int FrmDec = 1;
 int GoldID;
 int HeightEditMode;
 int HiStyle;
@@ -466,16 +469,20 @@ int REALTIME;
 int Shifter;
 
 //Game speed mode dependent SpeedShift variable. Used for controlling animations etc
-int SpeedSh = 1;
+int SpeedSh = 0;
+// Game cadence is independent of the slow/fast unit animation mode. The
+// original slider uses 0..100 (larger values mean a slower game).
+int FPSTime = 20;
+int SyncedFPSTime = 20;
 
 int StoneID;
 int TreeID;
 int WaterEditMode;
 
-//Game speed mode
-//0: Slow mode
-//1: Fast mode
-int exFMode = 1;
+// Game speed mode. Start in slow mode; solo players may switch it with Ctrl+D.
+// 0: Slow mode
+// 1: Fast mode
+int exFMode = 0;
 
 //Timer Callback
 int cadr;
@@ -581,6 +588,7 @@ void SFLB_LoadGame( char* fnm, bool LoadNation );
 void CheckGP();
 void ClearMaps();
 void CmdChangeSpeed();
+void CmdSetSpeed( byte Speed );
 void CreateRandomHMap();
 void CreateTotalLocking();
 void CreateUnitsLocking();
@@ -1603,6 +1611,40 @@ void GameKeyCheck()
 			break;
 		case 46:
 			SpecCmd = 200;
+			break;
+
+		case 'D':
+			// In multiplayer, only the host may enqueue a speed command.  All peers
+			// apply that command from the shared execution buffer at the same tick.
+			if (NPlayers < 2 || MyDPID == ServerDPID)
+			{
+				if (GetKeyState( VK_CONTROL ) & 0x8000)
+				{
+					// Command 68 (CmdChangeSpeed) is intentionally disabled by the
+					// protocol. Command 69 remains supported and is applied only in solo.
+					CmdSetSpeed(exFMode ? 0 : 1);
+				}
+				// HISPEED is a local presentation shortcut; never enable it in a
+				// network game because it is not part of the shared command stream.
+				else if (NPlayers < 2 && (GetKeyState( VK_SHIFT ) & 0x8000))
+				{
+					switch (HISPEED)
+					{
+					case 0:
+						HISPEED = 1;
+						break;
+					case 1:
+						HISPEED = 2;
+						break;
+					case 2:
+						HISPEED = 3;
+						break;
+					default:
+						HISPEED = 0;
+						break;
+					}
+				}
+			}
 			break;
 
 		/*
@@ -2797,10 +2839,16 @@ void PreDrawGameProcess()
 		}
 	}
 
-	//Check if fast/slow mode was changed
-	if (exFMode != SpeedSh)
+	// In a network game the host alone publishes its selected speed.  Clients
+	// receive it through ExecuteBuffer() and must never enqueue a competing one.
+	if (exFMode != SpeedSh && (NPlayers < 2 || MyDPID == ServerDPID))
 	{
 		CmdSetSpeed( exFMode );
+	}
+	if (FPSTime != SyncedFPSTime && (NPlayers < 2 || MyDPID == ServerDPID))
+	{
+		// Values 2..102 of command 69 carry the independent game cadence.
+		CmdSetSpeed( 2 + FPSTime );
 	}
 
 	//Calculate population values for all players
@@ -3437,7 +3485,7 @@ void PostDrawGameProcess()
 			GameKeyCheck();
 		}
 		time_since_last_call = GetRealTime() - prev_postdraw_time;
-	} while (PauseMode || time_since_last_call < kPostDrawInterval);
+	} while (time_since_last_call < kMinimumPostDrawInterval);
 
 	prev_postdraw_time = GetRealTime();
 }
@@ -3708,13 +3756,13 @@ void SaveModeDatNow( void )
 	GFILE *fff = Gopen( "mode2.dat", "wt" )   /* mode2: ignore legacy 10-field MODE.DAT (factory data + old saves) that mis-parsed as muted volumes */;
 	if (fff)
 	{
-		//7th value was FPSTime
+		// Keep the legacy 12 fields unchanged; append the independent game speed.
 		// field order matches the fixed reader: War, Work, Order, Midi (WorkSound used to be
 		// dropped here — an OrderSound duplicate was written in its slot)
-		Gprintf( fff, "%d %d %d %d %d %d %d %d %d %d %d %d",
+		Gprintf( fff, "%d %d %d %d %d %d %d %d %d %d %d %d %d",
 			ex_window_x, ex_window_y, ex_x, ex_y,
 			WarSound, WorkSound, OrderSound,
-			MidiSound, 0, ScrollSpeed, exFMode, PlayMode );
+			MidiSound, 0, ScrollSpeed, exFMode, PlayMode, FPSTime );
 		Gclose( fff );
 	}
 	GFILE *rec_settings_file = Gopen( "rec.dat", "wt" );
@@ -3920,21 +3968,27 @@ int PASCAL WinMain(
 	//Load settings
 	GFILE* fff = Gopen( "mode2.dat", "rt" );
 	ScrollSpeed = 5;
+	FPSTime = 20;
+	SyncedFPSTime = 20;
 	if (fff)
 	{
 		//Distinguish between last window adn fullscreen resolutions
 		int ex_window_x, ex_window_y, ex_x, ex_y;
 		int dummy;
-		//7th value was FPSTime
+		int savedGameSpeed = FPSTime;
+		// The first 12 values are the existing mode2.dat layout. The 13th is
+		// present only in files written after restoring the original slider.
 		// NOTE: field order fixed — the old reader scanned &WarSound,&OrderSound,&OrderSound,...
 		// (a typo mirrored in the writer), so WorkSound was NEVER loaded and stayed 0 forever
 		// (work/chop/build sounds permanently mute). Old files still parse fine: their 3rd field
 		// was a duplicate of the 2nd, which now lands in WorkSound — same audible value.
-		Gscanf( fff, "%d%d%d%d%d%d%d%d%d%d%d%d",
+		int fields = Gscanf( fff, "%d%d%d%d%d%d%d%d%d%d%d%d%d",
 			&ex_window_x, &ex_window_y, &ex_x, &ex_y,
 			&WarSound, &WorkSound, &OrderSound, &MidiSound,
-			&dummy, &ScrollSpeed, &exFMode, &PlayMode );
+			&dummy, &ScrollSpeed, &exFMode, &PlayMode, &savedGameSpeed );
 		Gclose( fff );
+		if (fields == 13 && savedGameSpeed >= 0 && savedGameSpeed <= 100)
+			FPSTime = savedGameSpeed;
 		// Migration: an all-zero sound block is the artifact of the old zero-defaults bug being
 		// persisted (not a deliberate user choice — the UI has a separate way to disable sound).
 		// Restore audible defaults once.
@@ -3960,6 +4014,11 @@ int PASCAL WinMain(
 			ex_other_RealLy = ex_window_y;
 		}
 	}
+	// Speed is a per-game choice. Older mode2.dat files may have saved fast mode;
+	// do not let that silently make every new session start fast.
+	exFMode = 0;
+	SpeedSh = 0;
+	FrmDec = 1;
 	// Apply the music volume UNCONDITIONALLY (saved MidiSound, or the audible-100 default set
 	// above when there's no mode2.dat yet) — this must be the ONLY place that sets the initial
 	// music gain, so the Options slider (which reads this same value back) and the actual audio

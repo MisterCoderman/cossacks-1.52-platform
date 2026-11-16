@@ -39,6 +39,11 @@ extern PlayerInfo PINFO[8];
 extern const int kSystemMessageDisplayTime;
 
 extern int exFMode;
+extern int FPSTime;
+extern int SyncedFPSTime;
+extern DPID MyDPID;
+extern DPID ServerDPID;
+extern word NPlayers;
 
 void Rept( LPSTR sz, ... );
 extern DWORD RealTime;
@@ -872,6 +877,12 @@ void CmdChangeSpeed()
 
 void CmdSetSpeed( byte Speed )
 {
+	// Only the host may write a multiplayer speed command into its local
+	// command stream. That stream is then executed by every peer in lockstep.
+	if (NPlayers > 1 && MyDPID != ServerDPID)
+	{
+		return;
+	}
 	ExBuf[EBPos] = 69;
 	ExBuf[EBPos + 1] = Speed;
 	EBPos += 2;
@@ -2257,11 +2268,18 @@ void SendSelectedToXY( byte NI, int xx, int yy, short Dir, byte Type )
 //Called only from ExecuteBuffer()
 void SetGSpeed( byte speed )
 {
-	if ( 1 == NPlayers )//BUGFIX: allow ingame speed changing in single player only
+	// This function runs only when command 69 is read from the deterministic
+	// execution buffer. Apply the host's command identically on every peer.
+	if (speed <= 1)
 	{
 		FrmDec = speed + 1;
 		SpeedSh = speed;
 		exFMode = speed;
+	}
+	else if (speed <= 102)
+	{
+		FPSTime = speed - 2;
+		SyncedFPSTime = FPSTime;
 	}
 }
 

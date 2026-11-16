@@ -4642,6 +4642,9 @@ bool PInside( int x, int y, int x1, int y1, int xp, int yp );
 extern int time1;
 extern int time2;
 extern int tmtmt;
+// Rendering may run more often than the game simulation.  World animation
+// state and animation-triggered sounds advance only on a simulation step.
+bool advanceWorldAnimations = true;
 #ifdef CONQUEST
 void QShowFiresEx( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** PreFires, NewAnimation** FiresAnm, int NFiresAnm, int FIndex )
 {
@@ -4683,6 +4686,8 @@ void QShowFiresEx( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** Pre
 		int NOG = NFir*( LM - OB->Life ) / L2;
 		if ( NOG > NFir )NOG = NFir;
 		FireInfo* GFIN = OB->IFire;
+		if ( !advanceWorldAnimations &&
+			( !GFIN || GFIN->BStage != curst || !GFIN->Objs[FIndex] ) )return;
 		if ( GFIN&&GFIN->BStage != curst )
 		{
 			GFIN->Erase();
@@ -4725,7 +4730,7 @@ void QShowFiresEx( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** Pre
 		{
 			FIN->NeedFires = NOG;
 		};
-		if ( FIN->NeedFires > FIN->RealFires )
+		if ( advanceWorldAnimations && FIN->NeedFires > FIN->RealFires )
 		{
 			int J = FIN->RealFires;
 			if ( FIN->delay )FIN->delay--;
@@ -4751,7 +4756,7 @@ void QShowFiresEx( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** Pre
 				FIN->FireSprite[p] = 0;
 			};
 		};
-		if ( FIN->NeedFires < FIN->RealFires )
+		if ( advanceWorldAnimations && FIN->NeedFires < FIN->RealFires )
 		{
 			FIN->RealFires = FIN->NeedFires;
 		};
@@ -4760,7 +4765,7 @@ void QShowFiresEx( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** Pre
 			int ANI = div( i, NFiresAnm ).rem;
 			byte sta = FIN->FireStage[i];
 			NewAnimation* NANM = nullptr;
-			FIN->FireSprite[i]++;
+			if ( advanceWorldAnimations )FIN->FireSprite[i]++;
 			switch ( sta )
 			{
 			case 1:
@@ -4835,6 +4840,7 @@ void QShowFires( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** PreFi
 		if ( OB->Life >= L2 || !L2 )return;
 		int NOG = div( NFir*( L2 - OB->Life ), L2 ).quot;
 		FireInfo* GFIN = OB->IFire;
+		if ( !advanceWorldAnimations && ( !GFIN || !GFIN->Objs[FIndex] ) )return;
 		if ( !GFIN )
 		{
 			GFIN = new FireInfo;
@@ -4869,7 +4875,7 @@ void QShowFires( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** PreFi
 		{
 			FIN->NeedFires = NOG;
 		};
-		if ( FIN->NeedFires > FIN->RealFires )
+		if ( advanceWorldAnimations && FIN->NeedFires > FIN->RealFires )
 		{
 			int J = FIN->RealFires;
 			if ( FIN->delay )FIN->delay--;
@@ -4895,7 +4901,7 @@ void QShowFires( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** PreFi
 				FIN->FireSprite[p] = 0;
 			};
 		};
-		if ( FIN->NeedFires < FIN->RealFires )
+		if ( advanceWorldAnimations && FIN->NeedFires < FIN->RealFires )
 		{
 			FIN->RealFires = FIN->NeedFires;
 		};
@@ -4904,7 +4910,7 @@ void QShowFires( OneObject* OB, int x0, int y0, int FirIDX, NewAnimation** PreFi
 			int ANI = div( i, NFiresAnm ).rem;
 			byte sta = FIN->FireStage[i];
 			NewAnimation* NANM = nullptr;
-			FIN->FireSprite[i]++;
+			if ( advanceWorldAnimations )FIN->FireSprite[i]++;
 			switch ( sta )
 			{
 			case 1:
@@ -5397,7 +5403,7 @@ void ShowNewMonsters()
 							{
 								if ( CSP >= ANM->NFrames )
 								{
-									OB->NewCurSprite = 0;
+									if ( advanceWorldAnimations )OB->NewCurSprite = 0;
 									CSP = 0;
 								}
 
@@ -5420,7 +5426,7 @@ void ShowNewMonsters()
 									xs += ANM->PartSize;
 								}
 
-								if ( NOPAUSE )
+								if ( NOPAUSE && advanceWorldAnimations )
 								{
 									OB->NewCurSprite += ANM->Parts;;
 								}
@@ -15293,6 +15299,7 @@ int GetAmountOfProtectors( OneObject* OBJ )
 extern int HISPEED;
 void PlayAnimation( NewAnimation* NA, int Frame, int x, int y )
 {
+	if ( !advanceWorldAnimations )return;
 	if ( NA->SoundID == -1 )return;
 	int HF = NA->HotFrame;
 	Frame /= FrmDec;

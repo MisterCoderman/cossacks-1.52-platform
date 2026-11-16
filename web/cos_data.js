@@ -1,6 +1,6 @@
 // Lazy game-data backend for the Cossacks WASM port.
 //
-// The 240 MB archive is unpacked into per-language folders (data/en, data/ru, chosen via
+// The 240 MB archive is unpacked into per-language folders (data/en, data/ru, data/fr, chosen via
 // ?lang=). Files are pulled on demand. Crucially, the per-file loader uses a *synchronous*
 // XMLHttpRequest rather than async fetch()+ASYNCIFY: the engine opens data files from deep
 // inside C++ static initialisers (e.g. the global `GConstant` reading Const.lst) and from
@@ -51,7 +51,7 @@ addToLibrary({
       Module['preRun'].push(function () {
         try {
           var l = new URLSearchParams(location.search).get('lang');
-          if (l === 'ru') COS_DATA_STATE.base = 'data/ru';
+          if (l === 'ru' || l === 'fr') COS_DATA_STATE.base = 'data/' + l;
         } catch (e) {}
         try { FS.mkdir('/game'); } catch (e) {}
         try { FS.mkdir('/local'); } catch (e) {}
@@ -166,11 +166,12 @@ addToLibrary({
     var canon = UTF8ToString(canonPtr);
     var memfs = '/game/' + canon;
     if (FS.analyzePath(memfs).exists) return 0;                                  // already in MEMFS
-    if (COS_DATA_STATE.have && !COS_DATA_STATE.have.has(canon)) return -1;       // known-absent -> no request
     // Try the selected language dir first, then fall back to data/en. Language-neutral shared
     // assets — mission .m3d maps (from the .rar archives), music tracks and SFX — are stored only
     // under en to avoid duplicating hundreds of MB; RU (and any other lang) reaches them here.
-    // Per-tree local manifests (when loaded) tell which base REALLY has the file, so no 404 probes.
+    // Do not reject against the selected language's manifest here: it only describes that tree,
+    // so French/Russian would reject EN-only WAV effects before the fallback below. Per-tree local
+    // manifests tell which base REALLY has the file, so no 404 probes are needed.
     var bases = [COS_DATA_STATE.base];
     var sets  = [COS_DATA_STATE.localHave || null];
     if (COS_DATA_STATE.base !== 'data/en') { bases.push('data/en'); sets.push(COS_DATA_STATE.enHave || null); }
