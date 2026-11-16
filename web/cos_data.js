@@ -1,6 +1,6 @@
 // Lazy game-data backend for the Cossacks WASM port.
 //
-// The 240 MB archive is unpacked into per-language folders (data/en, data/ru, chosen via
+// The 240 MB archive is unpacked into per-language folders (data/en, data/ru, data/fr, chosen via
 // ?lang=). Files are pulled on demand. Crucially, the per-file loader uses a *synchronous*
 // XMLHttpRequest rather than async fetch()+ASYNCIFY: the engine opens data files from deep
 // inside C++ static initialisers (e.g. the global `GConstant` reading Const.lst) and from
@@ -51,7 +51,7 @@ addToLibrary({
       Module['preRun'].push(function () {
         try {
           var l = new URLSearchParams(location.search).get('lang');
-          if (l === 'ru') COS_DATA_STATE.base = 'data/ru';
+          if (l === 'ru' || l === 'fr') COS_DATA_STATE.base = 'data/' + l;
         } catch (e) {}
         try { FS.mkdir('/game'); } catch (e) {}
         try { FS.mkdir('/local'); } catch (e) {}
