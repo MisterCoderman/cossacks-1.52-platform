@@ -6319,6 +6319,23 @@ void PlayRandomTrack();
 extern byte TracksMask[16];
 char RECFILE[128] = "";
 
+// The speed setting has two positions. Let a click on either half of its rail
+// select that position; the scrollbar's existing drawing code handles dragging.
+static bool ChooseGameSpeedOnRail(SimpleDialog* dialog)
+{
+	VScrollBar* slider = (VScrollBar*)dialog;
+	slider->SPos = mouseX >= slider->x + slider->ScrDx + slider->LineLx / 2;
+	slider->NeedToDraw = true;
+	return true;
+}
+
+static void EnableGameSpeedRail(VScrollBar* slider)
+{
+	// addGP_ScrollBarL leaves y1 uninitialized, which prevents click dispatch.
+	slider->y1 = slider->y + slider->LineLy - 1;
+	slider->OnUserClick = &ChooseGameSpeedOnRail;
+}
+
 extern int screen_width;
 extern int screen_height;
 extern double screen_ratio;
@@ -6425,11 +6442,17 @@ bool ProcessMenuOptions()
 		VMode->CurLine = 0;
 	}
 
-	//Game speed mode
 	ComboBox* FMode = MMenu.addGP_ComboBox(nullptr, 240, 421 + 10 - 13, BTNS.GPID, 0, 9, 0, &WhiteFont, &YellowFont, nullptr);
 	FMode->AddLine(SLOWMOD);
 	FMode->AddLine(FASTMOD);
 	FMode->CurLine = exFMode;
+
+	// Both controls select the engine's shared slow/fast simulation mode.
+	VScrollBar* GameSpeed = MMenu.addGP_ScrollBarL(nullptr, X0, 450 + DY + 10 - 13 + 27,
+		1, exFMode, BTNS.GPID, 12, LX, 12, 0, 0);
+	EnableGameSpeedRail(GameSpeed);
+	int previousUnitSpeed = FMode->CurLine;
+	int previousGameSpeed = GameSpeed->SPos;
 
 	ComboBox* MUS = MMenu.addGP_ComboBox(nullptr, 240, 240 - 16 + 80 - 3 - 13, BTNS.GPID, 0, 9, 0, &WhiteFont, &YellowFont, nullptr);
 	MUS->AddLine(GetTextByID("NOCD"));
@@ -6470,6 +6493,12 @@ bool ProcessMenuOptions()
 		MMenu.MarkToDraw();
 		MMenu.ProcessDialogs();
 		MMenu.RefreshView();
+		if (FMode->CurLine != previousUnitSpeed)
+			GameSpeed->SPos = FMode->CurLine;
+		else if (GameSpeed->SPos != previousGameSpeed)
+			FMode->CurLine = GameSpeed->SPos;
+		previousUnitSpeed = FMode->CurLine;
+		previousGameSpeed = GameSpeed->SPos;
 		if (ItemChoose == 77)
 		{
 			RECSTATE = !RECSTATE;
@@ -6499,7 +6528,7 @@ bool ProcessMenuOptions()
 		WarSound = SVL->SPos;
 		MidiSound = MVL->SPos;
 		PlayMode = MUS->CurLine;
-		exFMode = FMode->CurLine;
+		exFMode = GameSpeed->SPos;
 		RecordMode = RECSTATE;
 #ifdef __EMSCRIPTEN__
 		// Persist NOW: on Windows these globals were written to mode.dat only at process exit,
@@ -6625,15 +6654,22 @@ bool ProcessGameOptions()
 		VMode->CurLine = 0;
 	}
 
-	//Speedmode
 	ComboBox* FMode = MMenu.addGP_ComboBox(nullptr, 240, 421 + 11, BTNS.GPID, 0, 9, 0, &WhiteFont, &YellowFont, nullptr);
 	FMode->AddLine(SLOWMOD);
 	FMode->AddLine(FASTMOD);
 	FMode->CurLine = exFMode;
-	if (1 < NPlayers)
-	{//Disable speed mode drop down list in multiplayer
+
+	VScrollBar* GameSpeed = MMenu.addGP_ScrollBarL(nullptr, X0, 450 + DY + 11 + 27,
+		1, exFMode, BTNS.GPID, 12, LX, 12, 0, 0);
+	EnableGameSpeedRail(GameSpeed);
+	int previousUnitSpeed = FMode->CurLine;
+	int previousGameSpeed = GameSpeed->SPos;
+	if (1 < NPlayers && MyDPID != ServerDPID)
+	{//Only the host can change the synchronized speed in multiplayer
 		FMode->Enabled = false;
 		FMode->Active = false;
+		GameSpeed->Enabled = false;
+		GameSpeed->Active = false;
 	}
 
 	ComboBox* MUS = MMenu.addGP_ComboBox(nullptr, 240, 240 - 15 + 80 - 3, BTNS.GPID, 0, 9, 0, &WhiteFont, &YellowFont, nullptr);
@@ -6664,6 +6700,12 @@ bool ProcessGameOptions()
 		MMenu.MarkToDraw();
 		MMenu.ProcessDialogs();
 		MMenu.RefreshView();
+		if (FMode->CurLine != previousUnitSpeed)
+			GameSpeed->SPos = FMode->CurLine;
+		else if (GameSpeed->SPos != previousGameSpeed)
+			FMode->CurLine = GameSpeed->SPos;
+		previousUnitSpeed = FMode->CurLine;
+		previousGameSpeed = GameSpeed->SPos;
 		SetCDVolume(MVL->SPos);
 		if (PrevPlayMode != (MUS->CurLine != 0))
 		{
@@ -6685,9 +6727,9 @@ bool ProcessGameOptions()
 		ScrollSpeed = SSP->SPos + 2;
 
 		//Just in case
-		if (1 == NPlayers)
-		{//Allow ingame speed mode changing only for single player
-			exFMode = FMode->CurLine;
+		if (1 == NPlayers || MyDPID == ServerDPID)
+		{//The host publishes the selected speed through the deterministic command buffer
+			exFMode = GameSpeed->SPos;
 		}
 
 		if (RealLx != ModeLX[VMode->CurLine] || RealLy != ModeLY[VMode->CurLine])

@@ -137,6 +137,11 @@ extern "C" void cos_bridge_text_push(unsigned short wch);     // SdlEventBridge:
 
 static bool wi_on_key(int eventType, const EmscriptenKeyboardEvent* e, void*) {
     int vk = (int)e->keyCode;
+    // Electron/macOS can report keyCode=0 for Escape while pointer lock or the
+    // fullscreen system-bar handler is active.  The semantic key/code remains
+    // available, so normalize it explicitly before handing the event to Win32.
+    if (!vk && (!strcmp(e->key, "Escape") || !strcmp(e->code, "Escape")))
+        vk = VK_ESCAPE;
     if (vk <= 0 || vk > 255) return false;
     int down = (eventType == EMSCRIPTEN_EVENT_KEYDOWN) ? 1 : 0;
     cos_bridge_key_state(vk, down);

@@ -448,7 +448,7 @@ int DrawGroundMode = 0;
 int DrawPixMode = 0;
 int Flips;
 int FoodID;
-int FrmDec = 2;
+int FrmDec = 1;
 int GoldID;
 int HeightEditMode;
 int HiStyle;
@@ -466,16 +466,16 @@ int REALTIME;
 int Shifter;
 
 //Game speed mode dependent SpeedShift variable. Used for controlling animations etc
-int SpeedSh = 1;
+int SpeedSh = 0;
 
 int StoneID;
 int TreeID;
 int WaterEditMode;
 
-//Game speed mode
-//0: Slow mode
-//1: Fast mode
-int exFMode = 1;
+// Game speed mode. Start in slow mode; solo players may switch it with Ctrl+D.
+// 0: Slow mode
+// 1: Fast mode
+int exFMode = 0;
 
 //Timer Callback
 int cadr;
@@ -581,6 +581,7 @@ void SFLB_LoadGame( char* fnm, bool LoadNation );
 void CheckGP();
 void ClearMaps();
 void CmdChangeSpeed();
+void CmdSetSpeed( byte Speed );
 void CreateRandomHMap();
 void CreateTotalLocking();
 void CreateUnitsLocking();
@@ -1603,6 +1604,40 @@ void GameKeyCheck()
 			break;
 		case 46:
 			SpecCmd = 200;
+			break;
+
+		case 'D':
+			// In multiplayer, only the host may enqueue a speed command.  All peers
+			// apply that command from the shared execution buffer at the same tick.
+			if (NPlayers < 2 || MyDPID == ServerDPID)
+			{
+				if (GetKeyState( VK_CONTROL ) & 0x8000)
+				{
+					// Command 68 (CmdChangeSpeed) is intentionally disabled by the
+					// protocol. Command 69 remains supported and is applied only in solo.
+					CmdSetSpeed(exFMode ? 0 : 1);
+				}
+				// HISPEED is a local presentation shortcut; never enable it in a
+				// network game because it is not part of the shared command stream.
+				else if (NPlayers < 2 && (GetKeyState( VK_SHIFT ) & 0x8000))
+				{
+					switch (HISPEED)
+					{
+					case 0:
+						HISPEED = 1;
+						break;
+					case 1:
+						HISPEED = 2;
+						break;
+					case 2:
+						HISPEED = 3;
+						break;
+					default:
+						HISPEED = 0;
+						break;
+					}
+				}
+			}
 			break;
 
 		/*
@@ -2797,8 +2832,9 @@ void PreDrawGameProcess()
 		}
 	}
 
-	//Check if fast/slow mode was changed
-	if (exFMode != SpeedSh)
+	// In a network game the host alone publishes its selected speed.  Clients
+	// receive it through ExecuteBuffer() and must never enqueue a competing one.
+	if (exFMode != SpeedSh && (NPlayers < 2 || MyDPID == ServerDPID))
 	{
 		CmdSetSpeed( exFMode );
 	}
